@@ -33,13 +33,13 @@ public class SecurityConfig {
 		return http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize.requestMatchers(
 						/* Public APIs */
-				        "/api/auth/**",
+				        "/auth/**",
 				        "/swagger-ui/**",
 				        "/v3/api-docs/**",
 				        "/swagger-ui.html"
 				).permitAll()
 						/* ADMIN APIs */
-				.requestMatchers("/api/admin/**")
+				.requestMatchers("/admin/**")
 				.hasRole("ADMIN")
 				.anyRequest()
 				.authenticated())
