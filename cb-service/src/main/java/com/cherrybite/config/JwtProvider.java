@@ -1,6 +1,7 @@
 package com.cherrybite.config;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -36,6 +37,10 @@ public class JwtProvider {
 	            .claim("role", user.getUserRole().name())
 	            .signWith(key)
 	            .compact();
+	}
+	
+	public String generateRefreshToken() {
+	    return UUID.randomUUID().toString();
 	}
 
 }
