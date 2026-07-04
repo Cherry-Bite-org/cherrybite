@@ -76,6 +76,9 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
+    @Column(name = "last_location_updated_at")
+    private LocalDateTime lastLocationUpdatedAt;
+    
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -247,6 +250,14 @@ public class User {
 
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public LocalDateTime getLastLocationUpdatedAt() {
+		return lastLocationUpdatedAt;
+	}
+
+	public void setLastLocationUpdatedAt(LocalDateTime lastLocationUpdatedAt) {
+		this.lastLocationUpdatedAt = lastLocationUpdatedAt;
 	}
     
 }
