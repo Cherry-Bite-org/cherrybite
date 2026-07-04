@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public String refreshAccessToken(RefreshTokenRequest refreshTokenValue) {
+	public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenValue) {
 
 		RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
 				.orElseThrow(() -> new UserException("Invalid refresh token"));
@@ -122,7 +122,10 @@ public class AuthServiceImpl implements AuthService {
 			throw new UserException("Refresh token expired");
 		}
 
-		return jwtProvider.generateToken(refreshToken.getUser());
+		String accessToken = jwtProvider.generateToken(refreshToken.getUser());
+		AuthResponse response = new AuthResponse();
+		response.setAccessToken(accessToken);
+		return response;
 	}
 
 	@Override

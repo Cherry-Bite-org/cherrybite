@@ -39,9 +39,9 @@ public class AuthController {
 
 	// Remove OTP return Later
 	@PostMapping("/send-otp")
-	public ResponseEntity<ApiResponse> signup(@RequestBody SendOtpRequest otpRequest) {
+	public ResponseEntity<AuthResponse> signup(@RequestBody SendOtpRequest otpRequest) {
 		String otp = otpService.sendOtp(otpRequest);
-		ApiResponse response = new ApiResponse();
+		AuthResponse response = new AuthResponse();
 		response.setMessage("OTP sent successfully : " + otp);
 		return ResponseEntity.ok(response);
 	}
@@ -67,15 +67,15 @@ public class AuthController {
 	}
 	
 	@PostMapping("/refresh-token")
-	public ResponseEntity<String> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
-		String response = authService.refreshAccessToken(refreshToken);
+	public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
+		AuthResponse response = authService.refreshAccessToken(refreshToken);
 		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/logout")
-	public ResponseEntity<ApiResponse> logout(@RequestBody RefreshTokenRequest refreshToken) {
+	public ResponseEntity<AuthResponse> logout(@RequestBody RefreshTokenRequest refreshToken) {
 		authService.logout(refreshToken);
-		ApiResponse response = new ApiResponse();
+		AuthResponse response = new AuthResponse();
 		response.setMessage("Logout Successfully");
 		return ResponseEntity.ok(response);
 	}

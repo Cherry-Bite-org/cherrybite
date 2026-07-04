@@ -15,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.cherrybite.enums.UserRole;
+import com.cherrybite.util.CurrentUser;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -47,11 +50,18 @@ public class JwtValidator extends OncePerRequestFilter {
 				SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getJwtSecret().getBytes());
 				Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload();
 
-				String userId = claims.get("userId", String.class);
-				String role = claims.get("role", String.class);
+				UUID userId = UUID.fromString(claims.get("userId", String.class));
+				UserRole role = UserRole.valueOf(claims.get("role", String.class));
+				String username = claims.get("username", String.class);
+				
+				CurrentUser currentUser = new CurrentUser(
+				        userId,
+				        username,
+				        role
+				);
 
-				List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role);
-				Authentication authentication  = new UsernamePasswordAuthenticationToken(UUID.fromString(userId), null, authorities);
+				List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
+				Authentication authentication  = new UsernamePasswordAuthenticationToken(currentUser, null, authorities);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			} catch (Exception e) {
 				jwtAuthenticationEntryPoint.commence(request, response,
