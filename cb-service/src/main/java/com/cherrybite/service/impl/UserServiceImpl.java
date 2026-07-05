@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException("Maximum 5MB");
 		}
 		storageService.delete(user.getProfileImageUrl());
-		String imageUrl = storageService.upload(file);
+		String imageUrl = storageService.upload(file, "profile");
 		user.setProfileImageUrl(imageUrl);
 		userRepository.save(user);
 		return imageUrl;

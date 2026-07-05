@@ -14,7 +14,7 @@ public class S3StorageService implements StorageService {
 	private static final Logger log = LoggerFactory.getLogger(S3StorageService.class);
 
 	@Override
-	public String upload(MultipartFile file) {
+	public String upload(MultipartFile file, String folderName) {
 		log.info("Upload Image to S3 Storage");
 		return null;
 	}
