@@ -31,13 +31,13 @@ public class LocalStorageService implements StorageService {
 	private String contextPath;
 
 	@Override
-	public String upload(MultipartFile file) {
+	public String upload(MultipartFile file, String folderName) {
 		log.info("Upload Image to Local Storage");
 		try {
 
 			String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-			Path path = Paths.get(uploadDir);
+			Path path = Paths.get(uploadDir, folderName);
 
 			if (!Files.exists(path)) {
 				Files.createDirectories(path);
@@ -45,9 +45,9 @@ public class LocalStorageService implements StorageService {
 
 			Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
 
-			return baseUrl + contextPath + "/uploads/profile/" + fileName;
+			return baseUrl + contextPath + "/uploads/" + folderName + "/" + fileName;
 		} catch (IOException e) {
-			throw new RuntimeException("Image upload failed");
+			throw new RuntimeException("Image upload failed", e);
 		}
 
 	}
