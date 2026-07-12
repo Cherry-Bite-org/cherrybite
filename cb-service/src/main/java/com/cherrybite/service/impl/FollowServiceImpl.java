@@ -1,6 +1,8 @@
 package com.cherrybite.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import com.cherrybite.entity.Follow;
 import com.cherrybite.entity.User;
 import com.cherrybite.exception.ResourceNotFoundException;
 import com.cherrybite.exception.UserException;
+import com.cherrybite.payload.response.FollowUserResponse;
 import com.cherrybite.repository.FollowRepository;
 import com.cherrybite.repository.UserRepository;
 import com.cherrybite.service.FollowService;
@@ -69,4 +72,61 @@ public class FollowServiceImpl implements FollowService {
 		return "User unfollowed successfully";
 	}
 
+	@Override
+	public List<FollowUserResponse> getFollowers(UUID userId) {
+
+		User currentUser = userServiceImpl.getCurrentUserEntity();
+
+		User user = userServiceImpl.getUserById(userId);
+
+		List<Follow> followers = followRepository.findByFollowing(user);
+
+		return followers.stream().map(follow -> {
+
+			User follower = follow.getFollower();
+
+			FollowUserResponse response = new FollowUserResponse();
+
+			response.setUserId(follower.getUserId());
+			response.setUserName(follower.getUserName());
+			response.setFullName(follower.getFullName());
+			response.setProfileImageUrl(follower.getProfileImageUrl());
+			response.setVerified(follower.getIsVerified());
+			response.setTrustScore(follower.getTrustScore());
+
+			response.setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, follower));
+
+			return response;
+
+		}).toList();
+	}
+
+	@Override
+	public List<FollowUserResponse> getFollowing(UUID userId) {
+
+		User currentUser = userServiceImpl.getCurrentUserEntity();
+
+		User user = userServiceImpl.getUserById(userId);
+
+		List<Follow> following = followRepository.findByFollower(user);
+
+		return following.stream().map(follow -> {
+
+			User followingUser = follow.getFollowing();
+
+			FollowUserResponse response = new FollowUserResponse();
+
+			response.setUserId(followingUser.getUserId());
+			response.setUserName(followingUser.getUserName());
+			response.setFullName(followingUser.getFullName());
+			response.setProfileImageUrl(followingUser.getProfileImageUrl());
+			response.setVerified(followingUser.getIsVerified());
+			response.setTrustScore(followingUser.getTrustScore());
+
+			response.setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, followingUser));
+
+			return response;
+
+		}).toList();
+	}
 }
