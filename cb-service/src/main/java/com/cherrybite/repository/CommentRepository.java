@@ -18,4 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 	List<Comment> findByParentCommentAndStatusOrderByCreatedAtAsc(Comment parentComment, CommentStatus status);
 
 	Optional<Comment> findByCommentIdAndStatus(UUID commentId, CommentStatus status);
+
+	long countByFoodPostAndStatus(FoodPost foodPost, CommentStatus status);
 }

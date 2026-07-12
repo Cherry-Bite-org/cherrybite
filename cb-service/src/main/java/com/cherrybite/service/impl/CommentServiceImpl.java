@@ -3,6 +3,8 @@ package com.cherrybite.service.impl;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +12,10 @@ import com.cherrybite.entity.Comment;
 import com.cherrybite.entity.CommentLike;
 import com.cherrybite.entity.FoodPost;
 import com.cherrybite.entity.User;
+import com.cherrybite.enums.ActivityType;
 import com.cherrybite.enums.CommentStatus;
 import com.cherrybite.enums.FoodPostStatus;
+import com.cherrybite.enums.NotificationType;
 import com.cherrybite.exception.ResourceNotFoundException;
 import com.cherrybite.exception.UserException;
 import com.cherrybite.payload.CreateCommentRequest;
@@ -22,10 +26,14 @@ import com.cherrybite.payload.response.ReplyResponse;
 import com.cherrybite.repository.CommentLikeRepository;
 import com.cherrybite.repository.CommentRepository;
 import com.cherrybite.repository.FoodPostRepository;
+import com.cherrybite.service.ActivityService;
 import com.cherrybite.service.CommentService;
+import com.cherrybite.service.NotificationService;
 
 @Service
 public class CommentServiceImpl implements CommentService {
+	
+	private static final Logger log = LoggerFactory.getLogger(CommentServiceImpl.class);
 
 	@Autowired
 	private UserServiceImpl userServiceImpl;
@@ -38,6 +46,12 @@ public class CommentServiceImpl implements CommentService {
 
 	@Autowired
 	private CommentLikeRepository commentLikeRepository;
+	
+	@Autowired
+	private NotificationService notificationService;
+	
+	@Autowired
+	private ActivityService activityService;
 
 	@Override
 	public CreateCommentResponse addComment(UUID foodPostId, CreateCommentRequest request) {
@@ -60,7 +74,24 @@ public class CommentServiceImpl implements CommentService {
 		comment.setComment(commentText);
 
 		Comment savedComment = commentRepository.save(comment);
-
+		
+		activityService.createActivity(
+		        currentUser,
+		        foodPost,
+		        savedComment,
+		        null,
+		        ActivityType.COMMENT);
+		
+		try {
+		notificationService.createNotification(
+		        foodPost.getCreatedBy(),
+		        currentUser,
+		        foodPost,
+		        comment,
+		        NotificationType.COMMENT);
+		} catch (Exception e) {
+		    log.error("Failed to create Comment notification", e);
+		}
 		return new CreateCommentResponse(savedComment.getCommentId(), "Comment added successfully");
 	}
 
@@ -102,7 +133,24 @@ public class CommentServiceImpl implements CommentService {
 		// Update reply count
 		parentComment.setReplyCount(parentComment.getReplyCount() + 1);
 		commentRepository.save(parentComment);
-
+		
+		activityService.createActivity(
+		        currentUser,
+		        parentComment.getFoodPost(),
+		        savedReply,
+		        null,
+		        ActivityType.REPLY);
+		
+		try {
+		notificationService.createNotification(
+		        parentComment.getUser(),
+		        currentUser,
+		        parentComment.getFoodPost(),
+		        reply,
+		        NotificationType.REPLY);
+		} catch (Exception e) {
+		    log.error("Failed to create reply comment notification", e);
+		}
 		return new CreateCommentResponse(savedReply.getCommentId(), "Reply added successfully");
 	}
 

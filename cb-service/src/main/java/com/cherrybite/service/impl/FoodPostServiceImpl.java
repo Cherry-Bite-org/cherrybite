@@ -9,31 +9,42 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cherrybite.entity.FoodItem;
 import com.cherrybite.entity.FoodPost;
 import com.cherrybite.entity.FoodPostImage;
+import com.cherrybite.entity.FoodPostReaction;
 import com.cherrybite.entity.Place;
 import com.cherrybite.entity.User;
+import com.cherrybite.enums.ActivityType;
+import com.cherrybite.enums.CommentStatus;
 import com.cherrybite.enums.FoodPostStatus;
+import com.cherrybite.enums.FoodReactionType;
 import com.cherrybite.exception.ResourceNotFoundException;
 import com.cherrybite.exception.UserException;
 import com.cherrybite.payload.CreateFoodPostRequest;
 import com.cherrybite.payload.UpdateFoodPostRequest;
 import com.cherrybite.payload.response.CreateFoodPostResponse;
 import com.cherrybite.payload.response.CreatorResponse;
+import com.cherrybite.payload.response.FeedResponse;
 import com.cherrybite.payload.response.FoodPostImageResponse;
 import com.cherrybite.payload.response.FoodPostResponse;
 import com.cherrybite.payload.response.NearbyFoodPostResponse;
 import com.cherrybite.payload.response.PlaceResponse;
 import com.cherrybite.payload.response.UserFoodPostResponse;
+import com.cherrybite.repository.CommentRepository;
 import com.cherrybite.repository.FoodItemRepository;
 import com.cherrybite.repository.FoodPostImageRepository;
+import com.cherrybite.repository.FoodPostReactionRepository;
 import com.cherrybite.repository.FoodPostRepository;
 import com.cherrybite.repository.PlaceRepository;
 import com.cherrybite.repository.UserRepository;
+import com.cherrybite.service.ActivityService;
 import com.cherrybite.service.FoodPostService;
 import com.cherrybite.service.StorageService;
 
@@ -60,6 +71,15 @@ public class FoodPostServiceImpl implements FoodPostService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private FoodPostReactionRepository reactionRepository;
+
+	@Autowired
+	private CommentRepository commentRepository;
+	
+	@Autowired
+	private ActivityService activityService;
 
 	@Override
 	public CreateFoodPostResponse createFoodPost(CreateFoodPostRequest request) {
@@ -103,6 +123,13 @@ public class FoodPostServiceImpl implements FoodPostService {
 		foodPost.setRecommended(false);
 
 		FoodPost savedFoodPost = foodPostRepository.save(foodPost);
+		
+		activityService.createActivity(
+		        currentUser,
+		        savedFoodPost,
+		        null,
+		        null,
+		        ActivityType.POST);
 
 		return new CreateFoodPostResponse(savedFoodPost.getFoodPostId(), "Food post created successfully");
 	}
@@ -380,5 +407,67 @@ public class FoodPostServiceImpl implements FoodPostService {
 			return Math.round(distance * 1000) + " m";
 		}
 		return String.format("%.1f km", distance);
+	}
+
+	@Override
+	public Page<FeedResponse> getFeed(int page, int size) {
+
+		User currentUser = userServiceImpl.getCurrentUserEntity();
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<FoodPost> posts = foodPostRepository.findFeed(currentUser.getUserId(), pageable);
+
+		return posts.map(post -> mapFeedResponse(post, currentUser));
+	}
+
+	private FeedResponse mapFeedResponse(FoodPost post, User currentUser) {
+
+		FeedResponse response = new FeedResponse();
+
+		response.setFoodPostId(post.getFoodPostId());
+
+		response.setFoodName(post.getFoodItem().getFoodName());
+
+		response.setDescription(post.getDescription());
+
+		response.setRating(post.getRating());
+
+		response.setPrice(post.getPrice());
+
+		response.setPlaceId(post.getFoodItem().getPlace().getPlaceId());
+
+		response.setPlaceName(post.getFoodItem().getPlace().getName());
+
+		response.setUserId(post.getCreatedBy().getUserId());
+
+		response.setUserName(post.getCreatedBy().getUserName());
+
+		response.setFullName(post.getCreatedBy().getFullName());
+
+		response.setProfileImageUrl(post.getCreatedBy().getProfileImageUrl());
+
+		response.setVerified(post.getCreatedBy().getIsVerified());
+
+		response.setThumbnailUrl(getThumbnail(post));
+
+		response.setConfirmedCount(reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.CONFIRMED));
+
+		response.setNotAccurateCount(
+				reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.NOT_ACCURATE));
+
+		response.setCommentCount(commentRepository.countByFoodPostAndStatus(post, CommentStatus.ACTIVE));
+
+		response.setMyReaction(reactionRepository.findByFoodPostAndUser(post, currentUser)
+				.map(FoodPostReaction::getReactionType).orElse(null));
+
+		response.setCreatedAt(post.getCreatedAt());
+
+		return response;
+	}
+
+	private String getThumbnail(FoodPost foodPost) {
+		return foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(foodPost)
+				.map(FoodPostImage::getImageUrl).orElse(null);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 			WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :keyword, '%'))
 			   OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
 			ORDER BY u.trustScore DESC
-			LIMIT 20
 			""")
-	List<User> searchUsers(@Param("keyword") String keyword);
+	List<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
 }
