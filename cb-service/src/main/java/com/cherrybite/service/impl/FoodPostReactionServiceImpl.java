@@ -2,23 +2,31 @@ package com.cherrybite.service.impl;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cherrybite.entity.FoodPost;
 import com.cherrybite.entity.FoodPostReaction;
 import com.cherrybite.entity.User;
+import com.cherrybite.enums.ActivityType;
 import com.cherrybite.enums.FoodPostStatus;
 import com.cherrybite.enums.FoodReactionType;
+import com.cherrybite.enums.NotificationType;
 import com.cherrybite.exception.ResourceNotFoundException;
 import com.cherrybite.exception.UserException;
 import com.cherrybite.payload.response.FoodPostReactionSummaryResponse;
 import com.cherrybite.repository.FoodPostReactionRepository;
 import com.cherrybite.repository.FoodPostRepository;
+import com.cherrybite.service.ActivityService;
 import com.cherrybite.service.FoodPostReactionService;
+import com.cherrybite.service.NotificationService;
 
 @Service
 public class FoodPostReactionServiceImpl implements FoodPostReactionService {
+	
+	private static final Logger log = LoggerFactory.getLogger(FoodPostReactionServiceImpl.class);
 
 	@Autowired
 	private FoodPostRepository foodPostRepository;
@@ -28,6 +36,12 @@ public class FoodPostReactionServiceImpl implements FoodPostReactionService {
 
 	@Autowired
 	private FoodPostReactionRepository reactionRepository;
+	
+	@Autowired
+	private NotificationService notificationService;
+	
+	@Autowired
+	private ActivityService activityService;
 
 	@Override
 	public String confirmFoodPost(UUID foodPostId) {
@@ -57,7 +71,24 @@ public class FoodPostReactionServiceImpl implements FoodPostReactionService {
 		reaction.setReactionType(FoodReactionType.CONFIRMED);
 
 		reactionRepository.save(reaction);
+		
+		activityService.createActivity(
+		        currentUser,
+		        foodPost,
+		        null,
+		        null,
+		        ActivityType.CONFIRMED);
 
+		try {
+		notificationService.createNotification(
+		        foodPost.getCreatedBy(),
+		        currentUser,
+		        foodPost,
+		        null,
+		        NotificationType.CONFIRMED);
+		} catch (Exception e) {
+		    log.error("Failed to create Confirm notification", e);
+		}
 		return "Reaction updated successfully";
 	}
 
@@ -89,7 +120,24 @@ public class FoodPostReactionServiceImpl implements FoodPostReactionService {
 		reaction.setReactionType(FoodReactionType.NOT_ACCURATE);
 
 		reactionRepository.save(reaction);
-
+		
+		activityService.createActivity(
+		        currentUser,
+		        foodPost,
+		        null,
+		        null,
+		        ActivityType.NOT_ACCURATE);
+		
+		try {
+		notificationService.createNotification(
+		        foodPost.getCreatedBy(),
+		        currentUser,
+		        foodPost,
+		        null,
+		        NotificationType.NOT_ACCURATE);
+		} catch (Exception e) {
+		    log.error("Failed to create Not Accurate notification", e);
+		}
 		return "Reaction updated successfully";
 	}
 

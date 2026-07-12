@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,9 +41,11 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private StorageService storageService;
-	
+
 	@Autowired
 	private FollowRepository followRepository;
+
+	private static final int SEARCH_LIMIT = 20;
 
 	@Override
 	public UserResponse getCurrentUser() {
@@ -174,42 +177,38 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserSearchResponse> searchUsers(String keyword) {
+
 		User currentUser = getCurrentUserEntity();
-		
+
 		if (keyword == null || keyword.isBlank()) {
-		    throw new UserException("Keyword is required");
+			throw new UserException("Keyword is required");
 		}
+
 		keyword = keyword.trim();
+
 		log.info("Search user {}", keyword);
-		List<User> users = userRepository.searchUsers(keyword);
-		
-		Set<UUID> followingIds = new HashSet<>(
-		        followRepository.findFollowingIds(currentUser.getUserId())
-		);
 
-		return users.stream()
-		        .map(user -> {
+		List<User> users = userRepository.searchUsers(keyword, PageRequest.of(0, SEARCH_LIMIT));
 
-		            UserSearchResponse response = new UserSearchResponse();
+		Set<UUID> followingIds = new HashSet<>(followRepository.findFollowingIds(currentUser.getUserId()));
 
-		            response.setUserId(user.getUserId());
-		            response.setUsername(user.getUserName());
-		            response.setFullName(user.getFullName());
-		            response.setProfileImageUrl(user.getProfileImageUrl());
-		            response.setTrustScore(user.getTrustScore());
-		            response.setVerified(user.getIsVerified());
+		return users.stream().map(user -> {
 
-		            response.setFollowing(
-		                    followingIds.contains(user.getUserId())
-		            );
+			UserSearchResponse response = new UserSearchResponse();
 
-		            response.setIsCurrentUser(
-		                    currentUser.getUserId().equals(user.getUserId())
-		            );
+			response.setUserId(user.getUserId());
+			response.setUsername(user.getUserName());
+			response.setFullName(user.getFullName());
+			response.setProfileImageUrl(user.getProfileImageUrl());
+			response.setTrustScore(user.getTrustScore());
+			response.setVerified(user.getIsVerified());
 
-		            return response;
-		        })
-		        .toList();
+			response.setFollowing(followingIds.contains(user.getUserId()));
+
+			response.setIsCurrentUser(currentUser.getUserId().equals(user.getUserId()));
+
+			return response;
+		}).toList();
 	}
 
 }
