@@ -1,0 +1,1738 @@
+{
+  "info": {
+    "_postman_id": "0f2d560a-e791-41c7-97b6-103dd3031509",
+    "name": "Cherrybite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52395966",
+    "_collection_link": "https://go.postman.co/collection/52395966-0f2d560a-e791-41c7-97b6-103dd3031509?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "AuthRequest",
+      "item": [
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"8606368319\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/send-otp",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "send-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"identifier\": \"8606368319\",\n    \"otp\": \"755010\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/verify-otp",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "verify-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"temporaryToken\": \"2636df5d-0de3-45e2-a141-db77d68c1a21\",\n    \"fullName\": \"Anwarsha\",\n    \"userName\": \"anwar\",\n    \"email\":\"anwar@gmail.com\",\n    \"phoneNumber\":\"8606368319\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check-username",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"temporaryToken\": \"2636df5d-0de3-45e2-a141-db77d68c1a21\",\n    \"fullName\": \"Anwarsha\",\n    \"userName\": \"anwar\",\n    \"email\":\"anwar@gmail.com\",\n    \"phoneNumber\":\"8606368319\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/check-username?username=anwar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "check-username"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "anwar"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"eeb3256b-8a20-4b63-aec7-e189cc73f7fc\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/refresh-token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"eeb3256b-8a20-4b63-aec7-e189cc73f7fc\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserController",
+      "item": [
+        {
+          "name": "get currentuser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/users/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fullName\" : \"\",\r\n    \"bio\" : \"Food Explorer, Trivian\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/users/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update profile image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "f3e011fd-48c8-4e89-9e15-17bf5e397c4b",
+                  "src": "/C:/Users/user/Downloads/jorgen-hendriksen-wQ-JkefGRq8-unsplash.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/users/profile-image",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "profile-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update current location",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"lastLatitude\": 8.5241,\r\n    \"lastLongitude\": 76.9366\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/users/location",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "location"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Public user profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/users/hanan",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "hanan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODMxNjc4MDIsImV4cCI6MTc4MzI1NDIwMiwidXNlcklkIjoiM2Y4MTQ2NzktOWYwMC00OTFlLWI4NDUtYTBjMDQ3MmM4MTRlIiwidXNlcm5hbWUiOiJhbndhciIsInJvbGUiOiJST0xFX1VTRVIifQ.VRb78Zs8zTXC0Q2AHMx44mueXPTa_-yKnofoQWfH4bw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/users/search?keyword=",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "users",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Follow Controller",
+      "item": [
+        {
+          "name": "Follow user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16gq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/follow/hanan",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "follow",
+                "hanan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16gq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/follow/hanan/unfollow",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "follow",
+                "hanan",
+                "unfollow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Followers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/follow/dc1524d4-af74-4e3a-819e-61b20694d076/followers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "follow",
+                "dc1524d4-af74-4e3a-819e-61b20694d076",
+                "followers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Following",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/follow/3f814679-9f00-491e-b845-a0c0472c814e/following",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "follow",
+                "3f814679-9f00-491e-b845-a0c0472c814e",
+                "following"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Place Controller",
+      "item": [
+        {
+          "name": "Create place",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16gq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Rahmath Hotel\",\r\n    \"address\":\"Thampanoor, Trivandrum\",\r\n    \"latitude\":8.4872,\r\n    \"longitude\":76.9521\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/places",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "places"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search place",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_16gq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/places/search?keyword=ra&latitude=8.52410000&longitude=76.93660000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "places",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "ra",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "8.52410000",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "76.93660000",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get place by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_16gq}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/places/7653c8b1-3e8b-40a1-9368-1fb09c4b69ca",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "places",
+                "7653c8b1-3e8b-40a1-9368-1fb09c4b69ca"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get nearby places",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/places/nearby?latitude=8.52410000&longitude=76.936600",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "places",
+                "nearby"
+              ],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "8.52410000"
+                },
+                {
+                  "key": "longitude",
+                  "value": "76.936600"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Controller",
+      "item": [
+        {
+          "name": "Place Controller",
+          "item": [
+            {
+              "name": "update place",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_secret_0qy9}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Rahmath Hotel\",\r\n    \"address\": \"Thampanoor, Trivandrum\",\r\n    \"latitude\": 8.4872000,\r\n    \"longitude\": 76.9521000,\r\n    \"verified\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/CB/admin/places/7653c8b1-3e8b-40a1-9368-1fb09c4b69ca",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "CB",
+                    "admin",
+                    "places",
+                    "7653c8b1-3e8b-40a1-9368-1fb09c4b69ca"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Food Post Controller",
+      "item": [
+        {
+          "name": "Create Food Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_0qy9}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"placeId\":\"7653c8b1-3e8b-40a1-9368-1fb09c4b69ca\",\n    \"foodName\":\"Beef Mandhi\",\n    \"description\":\"Not Recommended\",\n    \"rating\":2.8,\n    \"price\":220\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload food image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_0qy9}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "86633fe7-15eb-424a-82d4-28f3d569d3ba",
+                  "src": "/C:/Users/user/Downloads/anna-pelzer-IGfIGP5ONV0-unsplash.jpg"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "54199aa9-8e87-4bf4-9ef6-e6f6f4b46efc",
+                  "src": "/C:/Users/user/Downloads/lily-banse--YHSwy6uqvk-unsplash.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/fba94833-bae0-4be0-898a-6ca22aa6316f/images",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "fba94833-bae0-4be0-898a-6ca22aa6316f",
+                "images"
+              ],
+              "query": [
+                {
+                  "key": "files",
+                  "value": null,
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Food Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/fba94833-bae0-4be0-898a-6ca22aa6316f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "fba94833-bae0-4be0-898a-6ca22aa6316f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update food post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"foodName\":\"Mandi Beef\",\r\n    \"description\" : \"Highly Recommended\",\r\n    \"rating\":\"3.8\",\r\n    \"price\": 230\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/fba94833-bae0-4be0-898a-6ca22aa6316f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "fba94833-bae0-4be0-898a-6ca22aa6316f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Food post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{supabase_service_role_api_key_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/fba94833-bae0-4be0-898a-6ca22aa6316f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "fba94833-bae0-4be0-898a-6ca22aa6316f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get user food post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/users/anwar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "users",
+                "anwar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Nearby Food Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts/nearby?latitude=8.52410000&longitude=76.93660000",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts",
+                "nearby"
+              ],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "8.52410000",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "76.93660000",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comment Controller",
+      "item": [
+        {
+          "name": "Create Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comment\" : \"its yummy\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/554df84f-6020-4adf-a6f7-41d71b78f1fe",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "554df84f-6020-4adf-a6f7-41d71b78f1fe"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reply Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comment\" : \"Ya I tried its good\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/46bfbbb7-9efe-4bbe-9b92-fe12031d15a5/reply",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "46bfbbb7-9efe-4bbe-9b92-fe12031d15a5",
+                "reply"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"comment\" : \"Ya I tried its not good as expected\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/46bfbbb7-9efe-4bbe-9b92-fe12031d15a5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "46bfbbb7-9efe-4bbe-9b92-fe12031d15a5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/46bfbbb7-9efe-4bbe-9b92-fe12031d15a5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "46bfbbb7-9efe-4bbe-9b92-fe12031d15a5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Comments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/554df84f-6020-4adf-a6f7-41d71b78f1fe/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "554df84f-6020-4adf-a6f7-41d71b78f1fe",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Like Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/29b2b997-e35f-493a-8b06-528dd12c5cd4/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "29b2b997-e35f-493a-8b06-528dd12c5cd4",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Dislike Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/comment/29b2b997-e35f-493a-8b06-528dd12c5cd4/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "comment",
+                "29b2b997-e35f-493a-8b06-528dd12c5cd4",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Food Post Reaction Controller",
+      "item": [
+        {
+          "name": "Like Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts-reaction/75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0/confirm",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts-reaction",
+                "75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Dislike Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts-reaction/75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0/not-accurate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts-reaction",
+                "75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0",
+                "not-accurate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Reaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts-reaction/75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0/reaction",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts-reaction",
+                "75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0",
+                "reaction"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reaction Summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/food-posts-reaction/75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0/reactions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "food-posts-reaction",
+                "75f1f69f-fc7f-4f6b-a2a6-7882aaca6bc0",
+                "reactions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Home Controller",
+      "item": [
+        {
+          "name": "Get Feed",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/home/feed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "home",
+                "feed"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification Controller",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/notifications",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/notifications/c9ed3f7f-8087-4100-8627-2be8a9493237/read",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "notifications",
+                "c9ed3f7f-8087-4100-8627-2be8a9493237",
+                "read"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/notifications/read-all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "notifications",
+                "read-all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Unread Count",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/notifications/unread-count",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "notifications",
+                "unread-count"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Search Controller",
+      "item": [
+        {
+          "name": "search",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_secret_192o}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/CB/search?keyword=Rah",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "CB",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "Rah",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Activity Controller",
+      "item": [
+        {
+          "name": "Get My Activity",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "supabase_service_role_api_key_16gq",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_16gq",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_0qy9",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_192o",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_192o",
+      "secret": true
+    }
+  ]
+}
