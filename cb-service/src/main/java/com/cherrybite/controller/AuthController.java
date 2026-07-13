@@ -25,58 +25,58 @@ import com.cherrybite.service.OtpService;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-	
-	private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-	@Autowired
-	private OtpService otpService;
+  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
-	@Autowired
-	private AuthService authService;
+  @Autowired
+  private OtpService otpService;
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private AuthService authService;
 
-	// Remove OTP return Later
-	@PostMapping("/send-otp")
-	public ResponseEntity<AuthResponse> signup(@RequestBody SendOtpRequest otpRequest) {
-		String otp = otpService.sendOtp(otpRequest);
-		AuthResponse response = new AuthResponse();
-		response.setMessage("OTP sent successfully : " + otp);
-		return ResponseEntity.ok(response);
-	}
+  @Autowired
+  private UserRepository userRepository;
 
-	@PostMapping("/verify-otp")
-	public ResponseEntity<VerifyOtpResponse> verifyOtp(@RequestBody VerifyOtpRequest otpRequest) {
-		log.info("Verify OTP Controller");
-		VerifyOtpResponse otpResponse = otpService.verifyOtp(otpRequest);
-		return ResponseEntity.ok(otpResponse);
-	}
+  // Remove OTP return Later
+  @PostMapping("/send-otp")
+  public ResponseEntity<AuthResponse> signup(@RequestBody SendOtpRequest otpRequest) {
+    String otp = otpService.sendOtp(otpRequest);
+    AuthResponse response = new AuthResponse();
+    response.setMessage("OTP sent successfully : " + otp);
+    return ResponseEntity.ok(response);
+  }
 
-	@PostMapping("/register")
-	public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest registerRequest) {
-		AuthResponse response = authService.register(registerRequest);
-		return ResponseEntity.ok(response);
-	}
+  @PostMapping("/verify-otp")
+  public ResponseEntity<VerifyOtpResponse> verifyOtp(@RequestBody VerifyOtpRequest otpRequest) {
+    log.info("Verify OTP Controller");
+    VerifyOtpResponse otpResponse = otpService.verifyOtp(otpRequest);
+    return ResponseEntity.ok(otpResponse);
+  }
 
-	@GetMapping("/check-username")
-	public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+  @PostMapping("/register")
+  public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest registerRequest) {
+    AuthResponse response = authService.register(registerRequest);
+    return ResponseEntity.ok(response);
+  }
 
-		boolean available = !userRepository.findByUserName(username).isPresent();
-		return ResponseEntity.ok(available);
-	}
-	
-	@PostMapping("/refresh-token")
-	public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
-		AuthResponse response = authService.refreshAccessToken(refreshToken);
-		return ResponseEntity.ok(response);
-	}
-	
-	@PostMapping("/logout")
-	public ResponseEntity<AuthResponse> logout(@RequestBody RefreshTokenRequest refreshToken) {
-		authService.logout(refreshToken);
-		AuthResponse response = new AuthResponse();
-		response.setMessage("Logout Successfully");
-		return ResponseEntity.ok(response);
-	}
+  @GetMapping("/check-username")
+  public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+
+    boolean available = !userRepository.findByUserName(username).isPresent();
+    return ResponseEntity.ok(available);
+  }
+
+  @PostMapping("/refresh-token")
+  public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest refreshToken) {
+    AuthResponse response = authService.refreshAccessToken(refreshToken);
+    return ResponseEntity.ok(response);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<AuthResponse> logout(@RequestBody RefreshTokenRequest refreshToken) {
+    authService.logout(refreshToken);
+    AuthResponse response = new AuthResponse();
+    response.setMessage("Logout Successfully");
+    return ResponseEntity.ok(response);
+  }
 }

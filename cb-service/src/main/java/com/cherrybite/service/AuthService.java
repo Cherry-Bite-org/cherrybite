@@ -6,9 +6,9 @@ import com.cherrybite.payload.response.AuthResponse;
 
 public interface AuthService {
 
-	AuthResponse register(RegisterRequest request);
-	
-	AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenValue);
-	
-	void logout(RefreshTokenRequest refreshTokenValue);
+  AuthResponse register(RegisterRequest request);
+
+  AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenValue);
+
+  void logout(RefreshTokenRequest refreshTokenValue);
 }

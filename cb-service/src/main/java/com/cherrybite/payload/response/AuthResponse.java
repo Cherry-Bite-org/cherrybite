@@ -2,34 +2,34 @@ package com.cherrybite.payload.response;
 
 public class AuthResponse {
 
-	private String accessToken;
-	
-	private String refreshToken;
-    
-	private String message;
+  private String accessToken;
 
-	public String getAccessToken() {
-		return accessToken;
-	}
+  private String refreshToken;
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+  private String message;
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public String getRefreshToken() {
+    return refreshToken;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
 }

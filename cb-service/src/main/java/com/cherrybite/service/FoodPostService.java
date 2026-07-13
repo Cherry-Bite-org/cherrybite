@@ -17,19 +17,20 @@ import com.cherrybite.payload.response.UserFoodPostResponse;
 
 public interface FoodPostService {
 
-	CreateFoodPostResponse createFoodPost(CreateFoodPostRequest request);
+  CreateFoodPostResponse createFoodPost(CreateFoodPostRequest request);
 
-	String uploadFoodImages(UUID foodPostId, List<MultipartFile> files);
+  String uploadFoodImages(UUID foodPostId, List<MultipartFile> files);
 
-	FoodPostResponse getFoodPost(UUID foodPostId);
+  FoodPostResponse getFoodPost(UUID foodPostId);
 
-	String updateFoodPost(UUID foodPostId, UpdateFoodPostRequest request);
+  String updateFoodPost(UUID foodPostId, UpdateFoodPostRequest request);
 
-	String deleteFoodPost(UUID foodPostId);
+  String deleteFoodPost(UUID foodPostId);
 
-	List<UserFoodPostResponse> getUserFoodPosts(String username);
+  List<UserFoodPostResponse> getUserFoodPosts(String username);
 
-	List<NearbyFoodPostResponse> getNearbyFoodPosts(BigDecimal latitude, BigDecimal longitude, Double radius);
-	
-	Page<FeedResponse> getFeed(int page, int size);
+  List<NearbyFoodPostResponse> getNearbyFoodPosts(BigDecimal latitude, BigDecimal longitude,
+      Double radius);
+
+  Page<FeedResponse> getFeed(int page, int size);
 }

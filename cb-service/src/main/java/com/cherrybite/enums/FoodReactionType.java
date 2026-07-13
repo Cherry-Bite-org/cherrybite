@@ -2,7 +2,7 @@ package com.cherrybite.enums;
 
 public enum FoodReactionType {
 
-	CONFIRMED,
+  CONFIRMED,
 
-    NOT_ACCURATE
+  NOT_ACCURATE
 }

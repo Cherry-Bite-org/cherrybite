@@ -12,10 +12,10 @@ import com.cherrybite.enums.FoodReactionType;
 
 public interface FoodPostReactionRepository extends JpaRepository<FoodPostReaction, UUID> {
 
-	Optional<FoodPostReaction> findByFoodPostAndUser(FoodPost foodPost, User user);
+  Optional<FoodPostReaction> findByFoodPostAndUser(FoodPost foodPost, User user);
 
-	boolean existsByFoodPostAndUser(FoodPost foodPost, User user);
+  boolean existsByFoodPostAndUser(FoodPost foodPost, User user);
 
-	long countByFoodPostAndReactionType(FoodPost foodPost, FoodReactionType reactionType);
+  long countByFoodPostAndReactionType(FoodPost foodPost, FoodReactionType reactionType);
 
 }

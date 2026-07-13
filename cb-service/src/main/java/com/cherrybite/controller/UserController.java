@@ -28,45 +28,48 @@ import com.cherrybite.service.UserService;
 @RequestMapping("/users")
 public class UserController {
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@GetMapping("/me")
-	public ResponseEntity<UserResponse> getCurrentUser() {
-		return ResponseEntity.ok(userService.getCurrentUser());
-	}
+  @GetMapping("/me")
+  public ResponseEntity<UserResponse> getCurrentUser() {
+    return ResponseEntity.ok(userService.getCurrentUser());
+  }
 
-	@PutMapping("/profile")
-	public ResponseEntity<ApiResponse> updateUserProfile(@RequestBody UpdateUser updateUser) {
-		String message = userService.updateUserProfile(updateUser);
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+  @PutMapping("/profile")
+  public ResponseEntity<ApiResponse> updateUserProfile(@RequestBody UpdateUser updateUser) {
+    String message = userService.updateUserProfile(updateUser);
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ProfileImageResponse> uploadProfileImage(@RequestParam("file") MultipartFile file) {
-		String imageUrl = userService.uploadProfileImage(file);
-		ProfileImageResponse profileImageUrl = new ProfileImageResponse();
-		profileImageUrl.setProfileImageUrl(imageUrl);
-		return ResponseEntity.ok(profileImageUrl);
-	}
+  @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ProfileImageResponse> uploadProfileImage(
+      @RequestParam("file") MultipartFile file) {
+    String imageUrl = userService.uploadProfileImage(file);
+    ProfileImageResponse profileImageUrl = new ProfileImageResponse();
+    profileImageUrl.setProfileImageUrl(imageUrl);
+    return ResponseEntity.ok(profileImageUrl);
+  }
 
-	@PostMapping("/location")
-	public ResponseEntity<ApiResponse> saveCurrentLocation(@RequestBody UpdateLocationRequest request) {
-		String message = userService.saveCurrentLocation(request);
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+  @PostMapping("/location")
+  public ResponseEntity<ApiResponse> saveCurrentLocation(
+      @RequestBody UpdateLocationRequest request) {
+    String message = userService.saveCurrentLocation(request);
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/{username}")
-	public ResponseEntity<PublicUserProfileResponse> getPublicUserProfile(@PathVariable String username) {
-		return ResponseEntity.ok(userService.getPublicUserProfile(username));
-	}
+  @GetMapping("/{username}")
+  public ResponseEntity<PublicUserProfileResponse> getPublicUserProfile(
+      @PathVariable String username) {
+    return ResponseEntity.ok(userService.getPublicUserProfile(username));
+  }
 
-	@GetMapping("/search")
-	public ResponseEntity<List<UserSearchResponse>> searchUsers(@RequestParam String keyword) {
-		return ResponseEntity.ok(userService.searchUsers(keyword));
-	}
+  @GetMapping("/search")
+  public ResponseEntity<List<UserSearchResponse>> searchUsers(@RequestParam String keyword) {
+    return ResponseEntity.ok(userService.searchUsers(keyword));
+  }
 }

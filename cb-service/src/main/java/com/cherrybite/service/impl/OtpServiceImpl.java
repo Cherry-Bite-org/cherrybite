@@ -26,129 +26,128 @@ import com.cherrybite.service.OtpService;
 @Service
 public class OtpServiceImpl implements OtpService {
 
-	private static final Logger log = LoggerFactory.getLogger(OtpServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(OtpServiceImpl.class);
 
-	@Autowired
-	private OtpVerificationRepository otpVerificationRepository;
+  @Autowired
+  private OtpVerificationRepository otpVerificationRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-	@Autowired
-	private JwtProvider jwtProvider;
-	
-	@Autowired
-	private RefreshTokenRepository refreshTokenRepository;
+  @Autowired
+  private JwtProvider jwtProvider;
 
-	@Override
-	public String sendOtp(SendOtpRequest otpRequest) {
-		log.info("OTP started to send for mobile: {}", otpRequest.getIdentifier());
+  @Autowired
+  private RefreshTokenRepository refreshTokenRepository;
 
-		Optional<OtpVerification> existingOtp = otpVerificationRepository
-				.findTopByIdentifierOrderByCreatedAtDesc(otpRequest.getIdentifier());
+  @Override
+  public String sendOtp(SendOtpRequest otpRequest) {
+    log.info("OTP started to send for mobile: {}", otpRequest.getIdentifier());
 
-		if (existingOtp.isPresent()) {
-			existingOtp.get().setVerified(false);
-			otpVerificationRepository.save(existingOtp.get());
-		}
+    Optional<OtpVerification> existingOtp = otpVerificationRepository
+        .findTopByIdentifierOrderByCreatedAtDesc(otpRequest.getIdentifier());
 
-		String otp = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+    if (existingOtp.isPresent()) {
+      existingOtp.get().setVerified(false);
+      otpVerificationRepository.save(existingOtp.get());
+    }
 
-		OtpVerification otpVerification = new OtpVerification();
-		otpVerification.setIdentifier(otpRequest.getIdentifier());
-		otpVerification.setOtp(otp);
-		otpVerification.setCreatedAt(LocalDateTime.now());
-		otpVerification.setExpiresAt(LocalDateTime.now().plusMinutes(5));
-		otpVerification.setVerified(false);
-		otpVerificationRepository.save(otpVerification);
+    String otp = String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
 
-		log.info("OTP send successfully");
-		// Later remove return otp
-		return otp;
-	}
+    OtpVerification otpVerification = new OtpVerification();
+    otpVerification.setIdentifier(otpRequest.getIdentifier());
+    otpVerification.setOtp(otp);
+    otpVerification.setCreatedAt(LocalDateTime.now());
+    otpVerification.setExpiresAt(LocalDateTime.now().plusMinutes(5));
+    otpVerification.setVerified(false);
+    otpVerificationRepository.save(otpVerification);
 
-	@Override
-	public VerifyOtpResponse verifyOtp(VerifyOtpRequest otpRequest) {
+    log.info("OTP send successfully");
+    // Later remove return otp
+    return otp;
+  }
 
-	    log.info("Verifying OTP for identifier: {}", otpRequest.getIdentifier());
+  @Override
+  public VerifyOtpResponse verifyOtp(VerifyOtpRequest otpRequest) {
 
-		OtpVerification otpVerification = otpVerificationRepository.findTopByIdentifierOrderByCreatedAtDesc(otpRequest.getIdentifier())
-				.orElseThrow(() -> new UserException("OTP not found"));
+    log.info("Verifying OTP for identifier: {}", otpRequest.getIdentifier());
 
-		if (Boolean.TRUE.equals(otpVerification.getVerified())) {
-			throw new UserException("OTP already used");
-		}
+    OtpVerification otpVerification = otpVerificationRepository
+        .findTopByIdentifierOrderByCreatedAtDesc(otpRequest.getIdentifier())
+        .orElseThrow(() -> new UserException("OTP not found"));
 
-		if (otpVerification.getExpiresAt().isBefore(LocalDateTime.now())) {
-			throw new UserException("OTP expired");
-		}
+    if (Boolean.TRUE.equals(otpVerification.getVerified())) {
+      throw new UserException("OTP already used");
+    }
 
-		if (!otpVerification.getOtp().equals(otpRequest.getOtp())) {
-			throw new UserException("Invalid OTP");
-		}
+    if (otpVerification.getExpiresAt().isBefore(LocalDateTime.now())) {
+      throw new UserException("OTP expired");
+    }
 
-		otpVerification.setVerified(true);
+    if (!otpVerification.getOtp().equals(otpRequest.getOtp())) {
+      throw new UserException("Invalid OTP");
+    }
 
-		Optional<User> existingUser = findUserByIdentifier(otpRequest.getIdentifier());
+    otpVerification.setVerified(true);
 
-		VerifyOtpResponse response = new VerifyOtpResponse();
+    Optional<User> existingUser = findUserByIdentifier(otpRequest.getIdentifier());
 
-		// Existing User Login
-		if (existingUser.isPresent()) {
+    VerifyOtpResponse response = new VerifyOtpResponse();
 
-			otpVerificationRepository.save(otpVerification);
+    // Existing User Login
+    if (existingUser.isPresent()) {
 
-			User user = existingUser.get();
+      otpVerificationRepository.save(otpVerification);
 
-			String accessToken = jwtProvider.generateToken(user);
-			
-			String refreshToken =
-			        createRefreshToken(user);
+      User user = existingUser.get();
 
-			response.setNewUser(false);
-			response.setAccessToken(accessToken);
-			response.setRefreshToken(refreshToken);
-			response.setMessage("Login successful");
+      String accessToken = jwtProvider.generateToken(user);
 
-			return response;
-		}
+      String refreshToken = createRefreshToken(user);
 
-		// New User Registration Flow
-		String temporaryToken = UUID.randomUUID().toString();
+      response.setNewUser(false);
+      response.setAccessToken(accessToken);
+      response.setRefreshToken(refreshToken);
+      response.setMessage("Login successful");
 
-		otpVerification.setTemporaryToken(temporaryToken);
+      return response;
+    }
 
-		otpVerificationRepository.save(otpVerification);
+    // New User Registration Flow
+    String temporaryToken = UUID.randomUUID().toString();
 
-		response.setNewUser(true);
-		response.setTemporaryToken(temporaryToken);
-		response.setMessage("OTP verified successfully");
+    otpVerification.setTemporaryToken(temporaryToken);
 
-		return response;
-	}
+    otpVerificationRepository.save(otpVerification);
 
-	private Optional<User> findUserByIdentifier(String identifier) {
+    response.setNewUser(true);
+    response.setTemporaryToken(temporaryToken);
+    response.setMessage("OTP verified successfully");
 
-		if (identifier.contains("@")) {
-			return userRepository.findByEmail(identifier);
-		}
+    return response;
+  }
 
-		return userRepository.findByPhoneNumber(identifier);
-	}
-	
-	private String createRefreshToken(User user) {
+  private Optional<User> findUserByIdentifier(String identifier) {
 
-	    String token = jwtProvider.generateRefreshToken();
+    if (identifier.contains("@")) {
+      return userRepository.findByEmail(identifier);
+    }
 
-	    RefreshToken refreshToken = new RefreshToken();
+    return userRepository.findByPhoneNumber(identifier);
+  }
 
-	    refreshToken.setUser(user);
-	    refreshToken.setToken(token);
-	    refreshToken.setExpiresAt(
-	            LocalDateTime.now().plusDays(30));
+  private String createRefreshToken(User user) {
 
-	    refreshTokenRepository.save(refreshToken);
+    String token = jwtProvider.generateRefreshToken();
 
-	    return token;
-	}
+    RefreshToken refreshToken = new RefreshToken();
+
+    refreshToken.setUser(user);
+    refreshToken.setToken(token);
+    refreshToken.setExpiresAt(LocalDateTime.now().plusDays(30));
+
+    refreshTokenRepository.save(refreshToken);
+
+    return token;
+  }
 }

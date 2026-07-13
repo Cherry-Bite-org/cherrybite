@@ -13,18 +13,18 @@ import com.cherrybite.entity.User;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-	Optional<User> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
-	Optional<User> findByPhoneNumber(String phoneNumber);
+  Optional<User> findByPhoneNumber(String phoneNumber);
 
-	Optional<User> findByUserName(String userName);
+  Optional<User> findByUserName(String userName);
 
-	@Query("""
-			SELECT u
-			FROM User u
-			WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-			   OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-			ORDER BY u.trustScore DESC
-			""")
-	List<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
+  @Query("""
+      SELECT u
+      FROM User u
+      WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+         OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+      ORDER BY u.trustScore DESC
+      """)
+  List<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
 }

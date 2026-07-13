@@ -15,12 +15,12 @@ import com.cherrybite.service.ActivityService;
 @RequestMapping("/activity")
 public class ActivityController {
 
-	@Autowired
-	private ActivityService activityService;
+  @Autowired
+  private ActivityService activityService;
 
-	@GetMapping("/my")
-	public ResponseEntity<Page<ActivityResponse>> getMyActivity(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "20") int size) {
-		return ResponseEntity.ok(activityService.getMyActivities(page, size));
-	}
+  @GetMapping("/my")
+  public ResponseEntity<Page<ActivityResponse>> getMyActivity(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    return ResponseEntity.ok(activityService.getMyActivities(page, size));
+  }
 }

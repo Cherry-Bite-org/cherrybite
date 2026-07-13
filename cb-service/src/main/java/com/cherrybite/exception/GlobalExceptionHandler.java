@@ -12,34 +12,39 @@ import com.cherrybite.payload.response.ErrorResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(UserException.class)
-	public ResponseEntity<ErrorResponse> handleUserException(UserException ex) {
-		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
-		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-	}
+  @ExceptionHandler(UserException.class)
+  public ResponseEntity<ErrorResponse> handleUserException(UserException ex) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+  }
 
-	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
-		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
-		return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-	}
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+  }
 
-	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-		ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-	}
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+    ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+  }
 
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-		ex.printStackTrace();
-		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
-		return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
+    ex.printStackTrace();
+    ErrorResponse errorResponse =
+        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-	@ExceptionHandler(MaxUploadSizeExceededException.class)
-	public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
-		ErrorResponse response = new ErrorResponse(HttpStatus.PAYLOAD_TOO_LARGE.value(), "Maximum file size is 10MB");
-		return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);
-	}
+  @ExceptionHandler(MaxUploadSizeExceededException.class)
+  public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(
+      MaxUploadSizeExceededException ex) {
+    ErrorResponse response =
+        new ErrorResponse(HttpStatus.PAYLOAD_TOO_LARGE.value(), "Maximum file size is 10MB");
+    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(response);
+  }
 }

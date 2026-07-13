@@ -33,58 +33,61 @@ import jakarta.validation.Valid;
 @RequestMapping("/food-posts")
 public class FoodPostController {
 
-	@Autowired
-	private FoodPostService foodPostService;
+  @Autowired
+  private FoodPostService foodPostService;
 
-	@PostMapping
-	public ResponseEntity<CreateFoodPostResponse> createFoodPost(@Valid @RequestBody CreateFoodPostRequest request) {
-		return ResponseEntity.ok(foodPostService.createFoodPost(request));
-	}
+  @PostMapping
+  public ResponseEntity<CreateFoodPostResponse> createFoodPost(
+      @Valid @RequestBody CreateFoodPostRequest request) {
+    return ResponseEntity.ok(foodPostService.createFoodPost(request));
+  }
 
-	@PostMapping(value = "/{foodPostId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<ApiResponse> uploadFoodImages(@PathVariable UUID foodPostId,
-			@RequestParam("files") List<MultipartFile> files) {
+  @PostMapping(value = "/{foodPostId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ApiResponse> uploadFoodImages(@PathVariable UUID foodPostId,
+      @RequestParam("files") List<MultipartFile> files) {
 
-		String message = foodPostService.uploadFoodImages(foodPostId, files);
+    String message = foodPostService.uploadFoodImages(foodPostId, files);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/{foodPostId}")
-	public ResponseEntity<FoodPostResponse> getFoodPost(@PathVariable UUID foodPostId) {
-		return ResponseEntity.ok(foodPostService.getFoodPost(foodPostId));
-	}
+  @GetMapping("/{foodPostId}")
+  public ResponseEntity<FoodPostResponse> getFoodPost(@PathVariable UUID foodPostId) {
+    return ResponseEntity.ok(foodPostService.getFoodPost(foodPostId));
+  }
 
-	@PutMapping("/{foodPostId}")
-	public ResponseEntity<ApiResponse> updateFoodPost(@PathVariable UUID foodPostId,
-			@Valid @RequestBody UpdateFoodPostRequest request) {
-		String message = foodPostService.updateFoodPost(foodPostId, request);
+  @PutMapping("/{foodPostId}")
+  public ResponseEntity<ApiResponse> updateFoodPost(@PathVariable UUID foodPostId,
+      @Valid @RequestBody UpdateFoodPostRequest request) {
+    String message = foodPostService.updateFoodPost(foodPostId, request);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@DeleteMapping("/{foodPostId}")
-	public ResponseEntity<ApiResponse> deleteFoodPost(@PathVariable UUID foodPostId) {
-		String message = foodPostService.deleteFoodPost(foodPostId);
+  @DeleteMapping("/{foodPostId}")
+  public ResponseEntity<ApiResponse> deleteFoodPost(@PathVariable UUID foodPostId) {
+    String message = foodPostService.deleteFoodPost(foodPostId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/users/{username}")
-	public ResponseEntity<List<UserFoodPostResponse>> getUserFoodPosts(@PathVariable String username) {
-		return ResponseEntity.ok(foodPostService.getUserFoodPosts(username));
-	}
+  @GetMapping("/users/{username}")
+  public ResponseEntity<List<UserFoodPostResponse>> getUserFoodPosts(
+      @PathVariable String username) {
+    return ResponseEntity.ok(foodPostService.getUserFoodPosts(username));
+  }
 
-	@GetMapping("/nearby")
-	public ResponseEntity<List<NearbyFoodPostResponse>> getNearbyFoodPosts(@RequestParam BigDecimal latitude,
-			@RequestParam BigDecimal longitude, @RequestParam(defaultValue = "5") Double radius) {
+  @GetMapping("/nearby")
+  public ResponseEntity<List<NearbyFoodPostResponse>> getNearbyFoodPosts(
+      @RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude,
+      @RequestParam(defaultValue = "5") Double radius) {
 
-		return ResponseEntity.ok(foodPostService.getNearbyFoodPosts(latitude, longitude, radius));
-	}
+    return ResponseEntity.ok(foodPostService.getNearbyFoodPosts(latitude, longitude, radius));
+  }
 }

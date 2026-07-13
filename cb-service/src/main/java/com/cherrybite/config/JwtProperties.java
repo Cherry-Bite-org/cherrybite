@@ -6,18 +6,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JwtProperties {
 
-	@Value("${jwt.secret}")
-	private String jwtSecret;
+  @Value("${jwt.secret}")
+  private String jwtSecret;
 
-	@Value("${jwt.header}")
-	private String jwtHeader;
+  @Value("${jwt.header}")
+  private String jwtHeader;
 
-	public String getJwtSecret() {
-		return jwtSecret;
-	}
+  public String getJwtSecret() {
+    return jwtSecret;
+  }
 
-	public String getJwtHeader() {
-		return jwtHeader;
-	}
+  public String getJwtHeader() {
+    return jwtHeader;
+  }
 
 }

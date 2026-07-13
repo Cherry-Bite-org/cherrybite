@@ -51,423 +51,431 @@ import com.cherrybite.service.StorageService;
 @Service
 public class FoodPostServiceImpl implements FoodPostService {
 
-	@Autowired
-	private FoodPostRepository foodPostRepository;
+  @Autowired
+  private FoodPostRepository foodPostRepository;
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-	@Autowired
-	private PlaceRepository placeRepository;
+  @Autowired
+  private PlaceRepository placeRepository;
 
-	@Autowired
-	private FoodItemRepository foodItemRepository;
+  @Autowired
+  private FoodItemRepository foodItemRepository;
 
-	@Autowired
-	private StorageService storageService;
+  @Autowired
+  private StorageService storageService;
 
-	@Autowired
-	private FoodPostImageRepository foodPostImageRepository;
+  @Autowired
+  private FoodPostImageRepository foodPostImageRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-	@Autowired
-	private FoodPostReactionRepository reactionRepository;
+  @Autowired
+  private FoodPostReactionRepository reactionRepository;
 
-	@Autowired
-	private CommentRepository commentRepository;
-	
-	@Autowired
-	private ActivityService activityService;
+  @Autowired
+  private CommentRepository commentRepository;
 
-	@Override
-	public CreateFoodPostResponse createFoodPost(CreateFoodPostRequest request) {
+  @Autowired
+  private ActivityService activityService;
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Override
+  public CreateFoodPostResponse createFoodPost(CreateFoodPostRequest request) {
 
-		Place place = placeRepository.findById(request.getPlaceId())
-				.orElseThrow(() -> new ResourceNotFoundException("Place not found"));
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		if (request.getRating().compareTo(BigDecimal.ZERO) < 0
-				|| request.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
+    Place place = placeRepository.findById(request.getPlaceId())
+        .orElseThrow(() -> new ResourceNotFoundException("Place not found"));
 
-			throw new UserException("Rating must be between 0 and 5");
-		}
+    if (request.getRating().compareTo(BigDecimal.ZERO) < 0
+        || request.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
 
-		if (request.getFoodName() == null || request.getFoodName().isBlank()) {
-			throw new UserException("Food name is required");
-		}
+      throw new UserException("Rating must be between 0 and 5");
+    }
 
-		if (request.getPrice() != null && request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-			throw new UserException("Price cannot be negative");
-		}
+    if (request.getFoodName() == null || request.getFoodName().isBlank()) {
+      throw new UserException("Food name is required");
+    }
 
-		String foodName = request.getFoodName().trim();
+    if (request.getPrice() != null && request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+      throw new UserException("Price cannot be negative");
+    }
 
-		FoodItem foodItem = foodItemRepository.findByPlaceAndFoodNameIgnoreCase(place, foodName).orElse(null);
+    String foodName = request.getFoodName().trim();
 
-		if (foodItem == null) {
-			foodItem = new FoodItem();
-			foodItem.setPlace(place);
-			foodItem.setFoodName(foodName);
-			foodItem.setCreatedBy(currentUser);
-			foodItem = foodItemRepository.save(foodItem);
-		}
-		FoodPost foodPost = new FoodPost();
-		foodPost.setFoodItem(foodItem);
-		foodPost.setCreatedBy(currentUser);
-		foodPost.setDescription(request.getDescription() == null ? null : request.getDescription().trim());
-		foodPost.setRating(request.getRating());
-		foodPost.setPrice(request.getPrice());
-		foodPost.setRecommended(false);
+    FoodItem foodItem =
+        foodItemRepository.findByPlaceAndFoodNameIgnoreCase(place, foodName).orElse(null);
 
-		FoodPost savedFoodPost = foodPostRepository.save(foodPost);
-		
-		activityService.createActivity(
-		        currentUser,
-		        savedFoodPost,
-		        null,
-		        null,
-		        ActivityType.POST);
+    if (foodItem == null) {
+      foodItem = new FoodItem();
+      foodItem.setPlace(place);
+      foodItem.setFoodName(foodName);
+      foodItem.setCreatedBy(currentUser);
+      foodItem = foodItemRepository.save(foodItem);
+    }
+    FoodPost foodPost = new FoodPost();
+    foodPost.setFoodItem(foodItem);
+    foodPost.setCreatedBy(currentUser);
+    foodPost
+        .setDescription(request.getDescription() == null ? null : request.getDescription().trim());
+    foodPost.setRating(request.getRating());
+    foodPost.setPrice(request.getPrice());
+    foodPost.setRecommended(false);
 
-		return new CreateFoodPostResponse(savedFoodPost.getFoodPostId(), "Food post created successfully");
-	}
+    FoodPost savedFoodPost = foodPostRepository.save(foodPost);
 
-	@Override
-	public String uploadFoodImages(UUID foodPostId, List<MultipartFile> files) {
+    activityService.createActivity(currentUser, savedFoodPost, null, null, ActivityType.POST);
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+    return new CreateFoodPostResponse(savedFoodPost.getFoodPostId(),
+        "Food post created successfully");
+  }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Override
+  public String uploadFoodImages(UUID foodPostId, List<MultipartFile> files) {
 
-		if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
-			throw new UserException("You are not allowed to upload images to this food post");
-		}
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-		if (files == null || files.isEmpty()) {
-			throw new UserException("Please upload at least one image");
-		}
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		if (files.size() > 10) {
-			throw new UserException("Maximum 10 images allowed");
-		}
+    if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
+      throw new UserException("You are not allowed to upload images to this food post");
+    }
 
-		Integer maxOrder = foodPostImageRepository.findMaxDisplayOrder(foodPost);
-		int order = maxOrder + 1;
+    if (files == null || files.isEmpty()) {
+      throw new UserException("Please upload at least one image");
+    }
 
-		for (MultipartFile file : files) {
+    if (files.size() > 10) {
+      throw new UserException("Maximum 10 images allowed");
+    }
 
-			String contentType = file.getContentType();
+    Integer maxOrder = foodPostImageRepository.findMaxDisplayOrder(foodPost);
+    int order = maxOrder + 1;
 
-			if (contentType == null || !contentType.startsWith("image/")) {
+    for (MultipartFile file : files) {
 
-				throw new UserException("Only image files are allowed");
-			}
+      String contentType = file.getContentType();
 
-			String imageUrl = storageService.upload(file, "food-post");
+      if (contentType == null || !contentType.startsWith("image/")) {
 
-			FoodPostImage image = new FoodPostImage();
+        throw new UserException("Only image files are allowed");
+      }
 
-			image.setFoodPost(foodPost);
-			image.setImageUrl(imageUrl);
-			image.setDisplayOrder(order++);
+      String imageUrl = storageService.upload(file, "food-post");
 
-			foodPostImageRepository.save(image);
-		}
+      FoodPostImage image = new FoodPostImage();
 
-		return "Images uploaded successfully";
-	}
+      image.setFoodPost(foodPost);
+      image.setImageUrl(imageUrl);
+      image.setDisplayOrder(order++);
 
-	@Override
-	public FoodPostResponse getFoodPost(UUID foodPostId) {
+      foodPostImageRepository.save(image);
+    }
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+    return "Images uploaded successfully";
+  }
 
-		List<FoodPostImage> images = foodPostImageRepository.findByFoodPostOrderByDisplayOrderAsc(foodPost);
+  @Override
+  public FoodPostResponse getFoodPost(UUID foodPostId) {
 
-		FoodPostResponse response = new FoodPostResponse();
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-		response.setFoodPostId(foodPost.getFoodPostId());
-		response.setFoodName(foodPost.getFoodItem().getFoodName());
-		response.setDescription(foodPost.getDescription());
-		response.setRating(foodPost.getRating());
-		response.setPrice(foodPost.getPrice());
-		response.setRecommended(foodPost.getRecommended());
-		response.setCreatedAt(foodPost.getCreatedAt());
+    List<FoodPostImage> images =
+        foodPostImageRepository.findByFoodPostOrderByDisplayOrderAsc(foodPost);
 
-		CreatorResponse creator = new CreatorResponse();
-		creator.setUserId(foodPost.getCreatedBy().getUserId());
-		creator.setUserName(foodPost.getCreatedBy().getUserName());
-		creator.setFullName(foodPost.getCreatedBy().getFullName());
-		creator.setProfileImageUrl(foodPost.getCreatedBy().getProfileImageUrl());
-		creator.setVerified(foodPost.getCreatedBy().getIsVerified());
+    FoodPostResponse response = new FoodPostResponse();
 
-		response.setCreator(creator);
+    response.setFoodPostId(foodPost.getFoodPostId());
+    response.setFoodName(foodPost.getFoodItem().getFoodName());
+    response.setDescription(foodPost.getDescription());
+    response.setRating(foodPost.getRating());
+    response.setPrice(foodPost.getPrice());
+    response.setRecommended(foodPost.getRecommended());
+    response.setCreatedAt(foodPost.getCreatedAt());
 
-		PlaceResponse place = new PlaceResponse();
-		place.setPlaceId(foodPost.getFoodItem().getPlace().getPlaceId());
-		place.setName(foodPost.getFoodItem().getPlace().getName());
-		place.setAddress(foodPost.getFoodItem().getPlace().getAddress());
+    CreatorResponse creator = new CreatorResponse();
+    creator.setUserId(foodPost.getCreatedBy().getUserId());
+    creator.setUserName(foodPost.getCreatedBy().getUserName());
+    creator.setFullName(foodPost.getCreatedBy().getFullName());
+    creator.setProfileImageUrl(foodPost.getCreatedBy().getProfileImageUrl());
+    creator.setVerified(foodPost.getCreatedBy().getIsVerified());
 
-		response.setPlace(place);
+    response.setCreator(creator);
 
-		List<FoodPostImageResponse> imageResponses = images.stream()
-				.map(image -> new FoodPostImageResponse(image.getImageId(), image.getImageUrl())).toList();
+    PlaceResponse place = new PlaceResponse();
+    place.setPlaceId(foodPost.getFoodItem().getPlace().getPlaceId());
+    place.setName(foodPost.getFoodItem().getPlace().getName());
+    place.setAddress(foodPost.getFoodItem().getPlace().getAddress());
 
-		response.setImages(imageResponses);
+    response.setPlace(place);
 
-		// Future modules
-		response.setLikeCount(0L);
-		response.setCommentCount(0L);
-		response.setLiked(false);
-		response.setBookmarked(false);
+    List<FoodPostImageResponse> imageResponses = images.stream()
+        .map(image -> new FoodPostImageResponse(image.getImageId(), image.getImageUrl())).toList();
 
-		return response;
-	}
+    response.setImages(imageResponses);
 
-	@Override
-	public String updateFoodPost(UUID foodPostId, UpdateFoodPostRequest request) {
+    // Future modules
+    response.setLikeCount(0L);
+    response.setCommentCount(0L);
+    response.setLiked(false);
+    response.setBookmarked(false);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    return response;
+  }
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+  @Override
+  public String updateFoodPost(UUID foodPostId, UpdateFoodPostRequest request) {
 
-		if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			throw new UserException("You are not allowed to update this food post");
-		}
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-		if (request.getRating().compareTo(BigDecimal.ZERO) < 0
-				|| request.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
+    if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
 
-			throw new UserException("Rating must be between 0 and 5");
-		}
+      throw new UserException("You are not allowed to update this food post");
+    }
 
-		if (request.getPrice() != null && request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+    if (request.getRating().compareTo(BigDecimal.ZERO) < 0
+        || request.getRating().compareTo(BigDecimal.valueOf(5)) > 0) {
 
-			throw new UserException("Price cannot be negative");
-		}
+      throw new UserException("Rating must be between 0 and 5");
+    }
 
-		String foodName = request.getFoodName().trim();
+    if (request.getPrice() != null && request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
 
-		Place place = foodPost.getFoodItem().getPlace();
+      throw new UserException("Price cannot be negative");
+    }
 
-		FoodItem foodItem = foodItemRepository.findByPlaceAndFoodNameIgnoreCase(place, foodName).orElse(null);
+    String foodName = request.getFoodName().trim();
 
-		if (foodItem == null) {
+    Place place = foodPost.getFoodItem().getPlace();
 
-			foodItem = new FoodItem();
-			foodItem.setPlace(place);
-			foodItem.setFoodName(foodName);
-			foodItem.setCreatedBy(currentUser);
+    FoodItem foodItem =
+        foodItemRepository.findByPlaceAndFoodNameIgnoreCase(place, foodName).orElse(null);
 
-			foodItem = foodItemRepository.save(foodItem);
-		}
+    if (foodItem == null) {
 
-		foodPost.setFoodItem(foodItem);
-		foodPost.setDescription(request.getDescription() == null ? null : request.getDescription().trim());
+      foodItem = new FoodItem();
+      foodItem.setPlace(place);
+      foodItem.setFoodName(foodName);
+      foodItem.setCreatedBy(currentUser);
 
-		foodPost.setRating(request.getRating());
-		foodPost.setPrice(request.getPrice());
+      foodItem = foodItemRepository.save(foodItem);
+    }
 
-		foodPostRepository.save(foodPost);
+    foodPost.setFoodItem(foodItem);
+    foodPost
+        .setDescription(request.getDescription() == null ? null : request.getDescription().trim());
 
-		return "Food post updated successfully";
-	}
+    foodPost.setRating(request.getRating());
+    foodPost.setPrice(request.getPrice());
 
-	@Override
-	public String deleteFoodPost(UUID foodPostId) {
+    foodPostRepository.save(foodPost);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    return "Food post updated successfully";
+  }
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+  @Override
+  public String deleteFoodPost(UUID foodPostId) {
 
-		if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			throw new UserException("You are not allowed to delete this food post");
-		}
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-		if (foodPost.getStatus() == FoodPostStatus.DELETED) {
-			throw new UserException("Food post already deleted");
-		}
+    if (!foodPost.getCreatedBy().getUserId().equals(currentUser.getUserId())) {
 
-		foodPost.setStatus(FoodPostStatus.DELETED);
-		foodPost.setDeletedAt(LocalDateTime.now());
+      throw new UserException("You are not allowed to delete this food post");
+    }
 
-		foodPostRepository.save(foodPost);
+    if (foodPost.getStatus() == FoodPostStatus.DELETED) {
+      throw new UserException("Food post already deleted");
+    }
 
-		return "Food post deleted successfully";
-	}
+    foodPost.setStatus(FoodPostStatus.DELETED);
+    foodPost.setDeletedAt(LocalDateTime.now());
 
-	private FoodPost getActiveFoodPost(UUID foodPostId) {
-		return foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
-	}
+    foodPostRepository.save(foodPost);
 
-	@Override
-	public List<UserFoodPostResponse> getUserFoodPosts(String username) {
+    return "Food post deleted successfully";
+  }
 
-		User user = userRepository.findByUserName(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+  private FoodPost getActiveFoodPost(UUID foodPostId) {
+    return foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
+        .orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
+  }
 
-		List<FoodPost> foodPosts = foodPostRepository.findByCreatedByAndStatusOrderByCreatedAtDesc(user,
-				FoodPostStatus.ACTIVE);
+  @Override
+  public List<UserFoodPostResponse> getUserFoodPosts(String username) {
 
-		return foodPosts.stream().map(foodPost -> {
+    User user = userRepository.findByUserName(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-			UserFoodPostResponse response = new UserFoodPostResponse();
+    List<FoodPost> foodPosts = foodPostRepository.findByCreatedByAndStatusOrderByCreatedAtDesc(user,
+        FoodPostStatus.ACTIVE);
 
-			response.setFoodPostId(foodPost.getFoodPostId());
+    return foodPosts.stream().map(foodPost -> {
 
-			response.setFoodName(foodPost.getFoodItem().getFoodName());
+      UserFoodPostResponse response = new UserFoodPostResponse();
 
-			response.setRating(foodPost.getRating());
+      response.setFoodPostId(foodPost.getFoodPostId());
 
-			Optional<FoodPostImage> image = foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(foodPost);
+      response.setFoodName(foodPost.getFoodItem().getFoodName());
 
-			response.setThumbnailUrl(image.map(FoodPostImage::getImageUrl).orElse(null));
+      response.setRating(foodPost.getRating());
 
-			// Future modules
-			response.setLikeCount(0L);
-			response.setCommentCount(0L);
+      Optional<FoodPostImage> image =
+          foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(foodPost);
 
-			return response;
+      response.setThumbnailUrl(image.map(FoodPostImage::getImageUrl).orElse(null));
 
-		}).toList();
-	}
+      // Future modules
+      response.setLikeCount(0L);
+      response.setCommentCount(0L);
 
-	@Override
-	public List<NearbyFoodPostResponse> getNearbyFoodPosts(BigDecimal latitude, BigDecimal longitude, Double radius) {
+      return response;
 
-		if (radius == null || radius <= 0) {
-			throw new UserException("Radius must be greater than zero");
-		}
+    }).toList();
+  }
 
-		List<FoodPost> posts = foodPostRepository.findByStatusOrderByCreatedAtDesc(FoodPostStatus.ACTIVE);
+  @Override
+  public List<NearbyFoodPostResponse> getNearbyFoodPosts(BigDecimal latitude, BigDecimal longitude,
+      Double radius) {
 
-		return posts.stream().map(post -> {
-			Place place = post.getFoodItem().getPlace();
-			double distance = calculateDistance(latitude.doubleValue(), longitude.doubleValue(),
-					place.getLatitude().doubleValue(), place.getLongitude().doubleValue());
-			if (distance > radius) {
-				return null;
-			}
+    if (radius == null || radius <= 0) {
+      throw new UserException("Radius must be greater than zero");
+    }
 
-			NearbyFoodPostResponse response = new NearbyFoodPostResponse();
+    List<FoodPost> posts =
+        foodPostRepository.findByStatusOrderByCreatedAtDesc(FoodPostStatus.ACTIVE);
 
-			response.setFoodPostId(post.getFoodPostId());
-			response.setFoodName(post.getFoodItem().getFoodName());
-			response.setRating(post.getRating());
-			response.setPrice(post.getPrice());
+    return posts.stream().map(post -> {
+      Place place = post.getFoodItem().getPlace();
+      double distance = calculateDistance(latitude.doubleValue(), longitude.doubleValue(),
+          place.getLatitude().doubleValue(), place.getLongitude().doubleValue());
+      if (distance > radius) {
+        return null;
+      }
 
-			response.setDistance(formatDistance(distance));
+      NearbyFoodPostResponse response = new NearbyFoodPostResponse();
 
-			response.setPlaceId(place.getPlaceId());
-			response.setPlaceName(place.getName());
+      response.setFoodPostId(post.getFoodPostId());
+      response.setFoodName(post.getFoodItem().getFoodName());
+      response.setRating(post.getRating());
+      response.setPrice(post.getPrice());
 
-			response.setUserId(post.getCreatedBy().getUserId());
-			response.setUserName(post.getCreatedBy().getUserName());
-			response.setProfileImageUrl(post.getCreatedBy().getProfileImageUrl());
+      response.setDistance(formatDistance(distance));
 
-			response.setThumbnailUrl(foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(post)
-					.map(FoodPostImage::getImageUrl).orElse(null));
+      response.setPlaceId(place.getPlaceId());
+      response.setPlaceName(place.getName());
 
-			return response;
+      response.setUserId(post.getCreatedBy().getUserId());
+      response.setUserName(post.getCreatedBy().getUserName());
+      response.setProfileImageUrl(post.getCreatedBy().getProfileImageUrl());
 
-		}).filter(Objects::nonNull).sorted(Comparator.comparing(response -> {
+      response
+          .setThumbnailUrl(foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(post)
+              .map(FoodPostImage::getImageUrl).orElse(null));
 
-			String distance = response.getDistance();
+      return response;
 
-			if (distance.endsWith(" km")) {
-				return Double.parseDouble(distance.replace(" km", ""));
-			}
+    }).filter(Objects::nonNull).sorted(Comparator.comparing(response -> {
 
-			if (distance.endsWith(" m")) {
-				return Double.parseDouble(distance.replace(" m", "")) / 1000;
-			}
-			return Double.MAX_VALUE;
-		})).toList();
-	}
+      String distance = response.getDistance();
 
-	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-		final int EARTH_RADIUS = 6371;
-		double latDistance = Math.toRadians(lat2 - lat1);
-		double lonDistance = Math.toRadians(lon2 - lon1);
+      if (distance.endsWith(" km")) {
+        return Double.parseDouble(distance.replace(" km", ""));
+      }
 
-		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + Math.cos(Math.toRadians(lat1))
-				* Math.cos(Math.toRadians(lat2)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+      if (distance.endsWith(" m")) {
+        return Double.parseDouble(distance.replace(" m", "")) / 1000;
+      }
+      return Double.MAX_VALUE;
+    })).toList();
+  }
 
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		return EARTH_RADIUS * c;
-	}
+  private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    final int EARTH_RADIUS = 6371;
+    double latDistance = Math.toRadians(lat2 - lat1);
+    double lonDistance = Math.toRadians(lon2 - lon1);
 
-	private String formatDistance(double distance) {
-		if (distance < 1) {
-			return Math.round(distance * 1000) + " m";
-		}
-		return String.format("%.1f km", distance);
-	}
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+        + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
-	@Override
-	public Page<FeedResponse> getFeed(int page, int size) {
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return EARTH_RADIUS * c;
+  }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  private String formatDistance(double distance) {
+    if (distance < 1) {
+      return Math.round(distance * 1000) + " m";
+    }
+    return String.format("%.1f km", distance);
+  }
 
-		Pageable pageable = PageRequest.of(page, size);
+  @Override
+  public Page<FeedResponse> getFeed(int page, int size) {
 
-		Page<FoodPost> posts = foodPostRepository.findFeed(currentUser.getUserId(), pageable);
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		return posts.map(post -> mapFeedResponse(post, currentUser));
-	}
+    Pageable pageable = PageRequest.of(page, size);
 
-	private FeedResponse mapFeedResponse(FoodPost post, User currentUser) {
+    Page<FoodPost> posts = foodPostRepository.findFeed(currentUser.getUserId(), pageable);
 
-		FeedResponse response = new FeedResponse();
+    return posts.map(post -> mapFeedResponse(post, currentUser));
+  }
 
-		response.setFoodPostId(post.getFoodPostId());
+  private FeedResponse mapFeedResponse(FoodPost post, User currentUser) {
 
-		response.setFoodName(post.getFoodItem().getFoodName());
+    FeedResponse response = new FeedResponse();
 
-		response.setDescription(post.getDescription());
+    response.setFoodPostId(post.getFoodPostId());
 
-		response.setRating(post.getRating());
+    response.setFoodName(post.getFoodItem().getFoodName());
 
-		response.setPrice(post.getPrice());
+    response.setDescription(post.getDescription());
 
-		response.setPlaceId(post.getFoodItem().getPlace().getPlaceId());
+    response.setRating(post.getRating());
 
-		response.setPlaceName(post.getFoodItem().getPlace().getName());
+    response.setPrice(post.getPrice());
 
-		response.setUserId(post.getCreatedBy().getUserId());
+    response.setPlaceId(post.getFoodItem().getPlace().getPlaceId());
 
-		response.setUserName(post.getCreatedBy().getUserName());
+    response.setPlaceName(post.getFoodItem().getPlace().getName());
 
-		response.setFullName(post.getCreatedBy().getFullName());
+    response.setUserId(post.getCreatedBy().getUserId());
 
-		response.setProfileImageUrl(post.getCreatedBy().getProfileImageUrl());
+    response.setUserName(post.getCreatedBy().getUserName());
 
-		response.setVerified(post.getCreatedBy().getIsVerified());
+    response.setFullName(post.getCreatedBy().getFullName());
 
-		response.setThumbnailUrl(getThumbnail(post));
+    response.setProfileImageUrl(post.getCreatedBy().getProfileImageUrl());
 
-		response.setConfirmedCount(reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.CONFIRMED));
+    response.setVerified(post.getCreatedBy().getIsVerified());
 
-		response.setNotAccurateCount(
-				reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.NOT_ACCURATE));
+    response.setThumbnailUrl(getThumbnail(post));
 
-		response.setCommentCount(commentRepository.countByFoodPostAndStatus(post, CommentStatus.ACTIVE));
+    response.setConfirmedCount(
+        reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.CONFIRMED));
 
-		response.setMyReaction(reactionRepository.findByFoodPostAndUser(post, currentUser)
-				.map(FoodPostReaction::getReactionType).orElse(null));
+    response.setNotAccurateCount(
+        reactionRepository.countByFoodPostAndReactionType(post, FoodReactionType.NOT_ACCURATE));
 
-		response.setCreatedAt(post.getCreatedAt());
+    response
+        .setCommentCount(commentRepository.countByFoodPostAndStatus(post, CommentStatus.ACTIVE));
 
-		return response;
-	}
+    response.setMyReaction(reactionRepository.findByFoodPostAndUser(post, currentUser)
+        .map(FoodPostReaction::getReactionType).orElse(null));
 
-	private String getThumbnail(FoodPost foodPost) {
-		return foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(foodPost)
-				.map(FoodPostImage::getImageUrl).orElse(null);
-	}
+    response.setCreatedAt(post.getCreatedAt());
+
+    return response;
+  }
+
+  private String getThumbnail(FoodPost foodPost) {
+    return foodPostImageRepository.findFirstByFoodPostOrderByDisplayOrderAsc(foodPost)
+        .map(FoodPostImage::getImageUrl).orElse(null);
+  }
 }

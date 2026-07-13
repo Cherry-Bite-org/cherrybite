@@ -32,283 +32,269 @@ import com.cherrybite.service.NotificationService;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-	
-	private static final Logger log = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
-
-	@Autowired
-	private FoodPostRepository foodPostRepository;
-
-	@Autowired
-	private CommentRepository commentRepository;
-
-	@Autowired
-	private CommentLikeRepository commentLikeRepository;
-	
-	@Autowired
-	private NotificationService notificationService;
-	
-	@Autowired
-	private ActivityService activityService;
-
-	@Override
-	public CreateCommentResponse addComment(UUID foodPostId, CreateCommentRequest request) {
-
-		User currentUser = userServiceImpl.getCurrentUserEntity();
-
-		FoodPost foodPost = foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
-
-		String commentText = request.getComment().trim();
-
-		if (commentText.isBlank()) {
-			throw new UserException("Comment cannot be empty");
-		}
-
-		Comment comment = new Comment();
-
-		comment.setFoodPost(foodPost);
-		comment.setUser(currentUser);
-		comment.setComment(commentText);
-
-		Comment savedComment = commentRepository.save(comment);
-		
-		activityService.createActivity(
-		        currentUser,
-		        foodPost,
-		        savedComment,
-		        null,
-		        ActivityType.COMMENT);
-		
-		try {
-		notificationService.createNotification(
-		        foodPost.getCreatedBy(),
-		        currentUser,
-		        foodPost,
-		        comment,
-		        NotificationType.COMMENT);
-		} catch (Exception e) {
-		    log.error("Failed to create Comment notification", e);
-		}
-		return new CreateCommentResponse(savedComment.getCommentId(), "Comment added successfully");
-	}
+  private static final Logger log = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-	private Comment getActiveComment(UUID commentId) {
-		return commentRepository.findByCommentIdAndStatus(commentId, CommentStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
-	}
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-	@Override
-	public CreateCommentResponse replyComment(UUID commentId, CreateCommentRequest request) {
+  @Autowired
+  private FoodPostRepository foodPostRepository;
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Autowired
+  private CommentRepository commentRepository;
 
-		Comment parentComment = getActiveComment(commentId);
+  @Autowired
+  private CommentLikeRepository commentLikeRepository;
 
-		// Optional: Don't allow replies to deleted food posts
-		if (parentComment.getFoodPost().getStatus() != FoodPostStatus.ACTIVE) {
-			throw new UserException("Food post not found");
-		}
+  @Autowired
+  private NotificationService notificationService;
 
-		String commentText = request.getComment().trim();
+  @Autowired
+  private ActivityService activityService;
 
-		if (commentText.isBlank()) {
-			throw new UserException("Reply cannot be empty");
-		}
+  @Override
+  public CreateCommentResponse addComment(UUID foodPostId, CreateCommentRequest request) {
 
-		Comment reply = new Comment();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		reply.setFoodPost(parentComment.getFoodPost());
+    FoodPost foodPost =
+        foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
+            .orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
 
-		reply.setUser(currentUser);
+    String commentText = request.getComment().trim();
 
-		reply.setParentComment(parentComment);
+    if (commentText.isBlank()) {
+      throw new UserException("Comment cannot be empty");
+    }
 
-		reply.setComment(commentText);
+    Comment comment = new Comment();
 
-		Comment savedReply = commentRepository.save(reply);
+    comment.setFoodPost(foodPost);
+    comment.setUser(currentUser);
+    comment.setComment(commentText);
 
-		// Update reply count
-		parentComment.setReplyCount(parentComment.getReplyCount() + 1);
-		commentRepository.save(parentComment);
-		
-		activityService.createActivity(
-		        currentUser,
-		        parentComment.getFoodPost(),
-		        savedReply,
-		        null,
-		        ActivityType.REPLY);
-		
-		try {
-		notificationService.createNotification(
-		        parentComment.getUser(),
-		        currentUser,
-		        parentComment.getFoodPost(),
-		        reply,
-		        NotificationType.REPLY);
-		} catch (Exception e) {
-		    log.error("Failed to create reply comment notification", e);
-		}
-		return new CreateCommentResponse(savedReply.getCommentId(), "Reply added successfully");
-	}
+    Comment savedComment = commentRepository.save(comment);
 
-	@Override
-	public String updateComment(UUID commentId, CreateCommentRequest request) {
+    activityService.createActivity(currentUser, foodPost, savedComment, null, ActivityType.COMMENT);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    try {
+      notificationService.createNotification(foodPost.getCreatedBy(), currentUser, foodPost,
+          comment, NotificationType.COMMENT);
+    } catch (Exception e) {
+      log.error("Failed to create Comment notification", e);
+    }
+    return new CreateCommentResponse(savedComment.getCommentId(), "Comment added successfully");
+  }
 
-		Comment comment = getActiveComment(commentId);
+  private Comment getActiveComment(UUID commentId) {
+    return commentRepository.findByCommentIdAndStatus(commentId, CommentStatus.ACTIVE)
+        .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+  }
 
-		if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
+  @Override
+  public CreateCommentResponse replyComment(UUID commentId, CreateCommentRequest request) {
 
-			throw new UserException("You are not allowed to update this comment");
-		}
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		if (comment.getFoodPost().getStatus() != FoodPostStatus.ACTIVE) {
-			throw new UserException("Food post not found");
-		}
+    Comment parentComment = getActiveComment(commentId);
 
-		String commentText = request.getComment().trim();
+    // Optional: Don't allow replies to deleted food posts
+    if (parentComment.getFoodPost().getStatus() != FoodPostStatus.ACTIVE) {
+      throw new UserException("Food post not found");
+    }
 
-		if (commentText.isBlank()) {
-			throw new UserException("Comment cannot be empty");
-		}
+    String commentText = request.getComment().trim();
 
-		comment.setComment(commentText);
+    if (commentText.isBlank()) {
+      throw new UserException("Reply cannot be empty");
+    }
 
-		commentRepository.save(comment);
+    Comment reply = new Comment();
 
-		return "Comment updated successfully";
-	}
+    reply.setFoodPost(parentComment.getFoodPost());
 
-	@Override
-	public String deleteComment(UUID commentId) {
+    reply.setUser(currentUser);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    reply.setParentComment(parentComment);
 
-		Comment comment = getActiveComment(commentId);
+    reply.setComment(commentText);
 
-		if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
+    Comment savedReply = commentRepository.save(reply);
 
-			throw new UserException("You are not allowed to delete this comment");
-		}
+    // Update reply count
+    parentComment.setReplyCount(parentComment.getReplyCount() + 1);
+    commentRepository.save(parentComment);
 
-		comment.setStatus(CommentStatus.DELETED);
-		comment.setComment("This comment has been deleted");
+    activityService.createActivity(currentUser, parentComment.getFoodPost(), savedReply, null,
+        ActivityType.REPLY);
 
-		commentRepository.save(comment);
+    try {
+      notificationService.createNotification(parentComment.getUser(), currentUser,
+          parentComment.getFoodPost(), reply, NotificationType.REPLY);
+    } catch (Exception e) {
+      log.error("Failed to create reply comment notification", e);
+    }
+    return new CreateCommentResponse(savedReply.getCommentId(), "Reply added successfully");
+  }
 
-		return "Comment deleted successfully";
-	}
+  @Override
+  public String updateComment(UUID commentId, CreateCommentRequest request) {
 
-	@Override
-	public List<CommentResponse> getComments(UUID foodPostId) {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		FoodPost foodPost = foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
+    Comment comment = getActiveComment(commentId);
 
-		List<Comment> comments = commentRepository
-				.findByFoodPostAndParentCommentIsNullAndStatusOrderByCreatedAtDesc(foodPost, CommentStatus.ACTIVE);
+    if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
 
-		return comments.stream().map(this::mapCommentResponse).toList();
-	}
+      throw new UserException("You are not allowed to update this comment");
+    }
 
-	private CommentResponse mapCommentResponse(Comment comment) {
+    if (comment.getFoodPost().getStatus() != FoodPostStatus.ACTIVE) {
+      throw new UserException("Food post not found");
+    }
 
-		CommentResponse response = new CommentResponse();
+    String commentText = request.getComment().trim();
 
-		response.setCommentId(comment.getCommentId());
-		response.setComment(comment.getComment());
-		response.setCreatedAt(comment.getCreatedAt());
+    if (commentText.isBlank()) {
+      throw new UserException("Comment cannot be empty");
+    }
 
-		CommentUserResponse user = new CommentUserResponse();
+    comment.setComment(commentText);
 
-		user.setUserId(comment.getUser().getUserId());
-		user.setUserName(comment.getUser().getUserName());
-		user.setFullName(comment.getUser().getFullName());
-		user.setProfileImageUrl(comment.getUser().getProfileImageUrl());
-		user.setVerified(comment.getUser().getIsVerified());
+    commentRepository.save(comment);
 
-		response.setUser(user);
+    return "Comment updated successfully";
+  }
 
-		response.setLikeCount(comment.getLikeCount());
-		response.setReplyCount(comment.getReplyCount());
+  @Override
+  public String deleteComment(UUID commentId) {
 
-		List<ReplyResponse> replies = commentRepository
-				.findByParentCommentAndStatusOrderByCreatedAtAsc(comment, CommentStatus.ACTIVE).stream()
-				.map(this::mapReplyResponse).toList();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		response.setReplies(replies);
+    Comment comment = getActiveComment(commentId);
 
-		return response;
-	}
+    if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
 
-	private ReplyResponse mapReplyResponse(Comment reply) {
+      throw new UserException("You are not allowed to delete this comment");
+    }
 
-		ReplyResponse response = new ReplyResponse();
+    comment.setStatus(CommentStatus.DELETED);
+    comment.setComment("This comment has been deleted");
 
-		response.setCommentId(reply.getCommentId());
-		response.setComment(reply.getComment());
-		response.setCreatedAt(reply.getCreatedAt());
+    commentRepository.save(comment);
 
-		CommentUserResponse user = new CommentUserResponse();
+    return "Comment deleted successfully";
+  }
 
-		user.setUserId(reply.getUser().getUserId());
-		user.setUserName(reply.getUser().getUserName());
-		user.setFullName(reply.getUser().getFullName());
-		user.setProfileImageUrl(reply.getUser().getProfileImageUrl());
-		user.setVerified(reply.getUser().getIsVerified());
+  @Override
+  public List<CommentResponse> getComments(UUID foodPostId) {
 
-		response.setUser(user);
+    FoodPost foodPost =
+        foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
+            .orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
 
-		response.setLikeCount(reply.getLikeCount());
+    List<Comment> comments =
+        commentRepository.findByFoodPostAndParentCommentIsNullAndStatusOrderByCreatedAtDesc(
+            foodPost, CommentStatus.ACTIVE);
 
-		return response;
-	}
+    return comments.stream().map(this::mapCommentResponse).toList();
+  }
 
-	@Override
-	public String likeComment(UUID commentId) {
+  private CommentResponse mapCommentResponse(Comment comment) {
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    CommentResponse response = new CommentResponse();
 
-		Comment comment = getActiveComment(commentId);
+    response.setCommentId(comment.getCommentId());
+    response.setComment(comment.getComment());
+    response.setCreatedAt(comment.getCreatedAt());
 
-		if (commentLikeRepository.existsByCommentAndUser(comment, currentUser)) {
-			throw new UserException("Comment already liked");
-		}
+    CommentUserResponse user = new CommentUserResponse();
 
-		CommentLike like = new CommentLike();
+    user.setUserId(comment.getUser().getUserId());
+    user.setUserName(comment.getUser().getUserName());
+    user.setFullName(comment.getUser().getFullName());
+    user.setProfileImageUrl(comment.getUser().getProfileImageUrl());
+    user.setVerified(comment.getUser().getIsVerified());
 
-		like.setComment(comment);
-		like.setUser(currentUser);
+    response.setUser(user);
 
-		commentLikeRepository.save(like);
+    response.setLikeCount(comment.getLikeCount());
+    response.setReplyCount(comment.getReplyCount());
 
-		comment.setLikeCount(comment.getLikeCount() + 1);
-		commentRepository.save(comment);
+    List<ReplyResponse> replies = commentRepository
+        .findByParentCommentAndStatusOrderByCreatedAtAsc(comment, CommentStatus.ACTIVE).stream()
+        .map(this::mapReplyResponse).toList();
 
-		return "Comment liked successfully";
-	}
+    response.setReplies(replies);
 
-	@Override
-	public String unlikeComment(UUID commentId) {
+    return response;
+  }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  private ReplyResponse mapReplyResponse(Comment reply) {
 
-		Comment comment = getActiveComment(commentId);
+    ReplyResponse response = new ReplyResponse();
 
-		CommentLike like = commentLikeRepository.findByCommentAndUser(comment, currentUser)
-				.orElseThrow(() -> new UserException("Comment is not liked"));
+    response.setCommentId(reply.getCommentId());
+    response.setComment(reply.getComment());
+    response.setCreatedAt(reply.getCreatedAt());
 
-		commentLikeRepository.delete(like);
+    CommentUserResponse user = new CommentUserResponse();
 
-		comment.setLikeCount(Math.max(0, comment.getLikeCount() - 1));
+    user.setUserId(reply.getUser().getUserId());
+    user.setUserName(reply.getUser().getUserName());
+    user.setFullName(reply.getUser().getFullName());
+    user.setProfileImageUrl(reply.getUser().getProfileImageUrl());
+    user.setVerified(reply.getUser().getIsVerified());
 
-		commentRepository.save(comment);
+    response.setUser(user);
 
-		return "Comment unliked successfully";
-	}
+    response.setLikeCount(reply.getLikeCount());
+
+    return response;
+  }
+
+  @Override
+  public String likeComment(UUID commentId) {
+
+    User currentUser = userServiceImpl.getCurrentUserEntity();
+
+    Comment comment = getActiveComment(commentId);
+
+    if (commentLikeRepository.existsByCommentAndUser(comment, currentUser)) {
+      throw new UserException("Comment already liked");
+    }
+
+    CommentLike like = new CommentLike();
+
+    like.setComment(comment);
+    like.setUser(currentUser);
+
+    commentLikeRepository.save(like);
+
+    comment.setLikeCount(comment.getLikeCount() + 1);
+    commentRepository.save(comment);
+
+    return "Comment liked successfully";
+  }
+
+  @Override
+  public String unlikeComment(UUID commentId) {
+
+    User currentUser = userServiceImpl.getCurrentUserEntity();
+
+    Comment comment = getActiveComment(commentId);
+
+    CommentLike like = commentLikeRepository.findByCommentAndUser(comment, currentUser)
+        .orElseThrow(() -> new UserException("Comment is not liked"));
+
+    commentLikeRepository.delete(like);
+
+    comment.setLikeCount(Math.max(0, comment.getLikeCount() - 1));
+
+    commentRepository.save(comment);
+
+    return "Comment unliked successfully";
+  }
 
 }

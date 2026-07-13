@@ -4,23 +4,23 @@ import java.math.BigDecimal;
 
 public class UpdateLocationRequest {
 
-	private BigDecimal lastLatitude;
-	
-	private BigDecimal lastLongitude;
+  private BigDecimal lastLatitude;
 
-	public BigDecimal getLastLatitude() {
-		return lastLatitude;
-	}
+  private BigDecimal lastLongitude;
 
-	public void setLastLatitude(BigDecimal lastLatitude) {
-		this.lastLatitude = lastLatitude;
-	}
+  public BigDecimal getLastLatitude() {
+    return lastLatitude;
+  }
 
-	public BigDecimal getLastLongitude() {
-		return lastLongitude;
-	}
+  public void setLastLatitude(BigDecimal lastLatitude) {
+    this.lastLatitude = lastLatitude;
+  }
 
-	public void setLastLongitude(BigDecimal lastLongitude) {
-		this.lastLongitude = lastLongitude;
-	}
+  public BigDecimal getLastLongitude() {
+    return lastLongitude;
+  }
+
+  public void setLastLongitude(BigDecimal lastLongitude) {
+    this.lastLongitude = lastLongitude;
+  }
 }

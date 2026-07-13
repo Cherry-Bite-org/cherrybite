@@ -5,123 +5,123 @@ import java.util.UUID;
 
 public class UserResponse {
 
-    private UUID userId;
+  private UUID userId;
 
-    private String fullName;
+  private String fullName;
 
-    private String userName;
+  private String userName;
 
-    private String email;
+  private String email;
 
-    private String phoneNumber;
+  private String phoneNumber;
 
-    private String profileImageUrl;
+  private String profileImageUrl;
 
-    private String bio;
+  private String bio;
 
-    private BigDecimal trustScore;
+  private BigDecimal trustScore;
 
-    private Integer reviewCount;
+  private Integer reviewCount;
 
-    private Integer followerCount;
+  private Integer followerCount;
 
-    private Integer followingCount;
+  private Integer followingCount;
 
-    private Boolean verified;
+  private Boolean verified;
 
-	public UUID getUserId() {
-		return userId;
-	}
+  public UUID getUserId() {
+    return userId;
+  }
 
-	public void setUserId(UUID userId) {
-		this.userId = userId;
-	}
+  public void setUserId(UUID userId) {
+    this.userId = userId;
+  }
 
-	public String getFullName() {
-		return fullName;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public String getUserName() {
-		return userName;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-	public String getProfileImageUrl() {
-		return profileImageUrl;
-	}
+  public String getProfileImageUrl() {
+    return profileImageUrl;
+  }
 
-	public void setProfileImageUrl(String profileImageUrl) {
-		this.profileImageUrl = profileImageUrl;
-	}
+  public void setProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
+  }
 
-	public String getBio() {
-		return bio;
-	}
+  public String getBio() {
+    return bio;
+  }
 
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
 
-	public BigDecimal getTrustScore() {
-		return trustScore;
-	}
+  public BigDecimal getTrustScore() {
+    return trustScore;
+  }
 
-	public void setTrustScore(BigDecimal trustScore) {
-		this.trustScore = trustScore;
-	}
+  public void setTrustScore(BigDecimal trustScore) {
+    this.trustScore = trustScore;
+  }
 
-	public Integer getReviewCount() {
-		return reviewCount;
-	}
+  public Integer getReviewCount() {
+    return reviewCount;
+  }
 
-	public void setReviewCount(Integer reviewCount) {
-		this.reviewCount = reviewCount;
-	}
+  public void setReviewCount(Integer reviewCount) {
+    this.reviewCount = reviewCount;
+  }
 
-	public Integer getFollowerCount() {
-		return followerCount;
-	}
+  public Integer getFollowerCount() {
+    return followerCount;
+  }
 
-	public void setFollowerCount(Integer followerCount) {
-		this.followerCount = followerCount;
-	}
+  public void setFollowerCount(Integer followerCount) {
+    this.followerCount = followerCount;
+  }
 
-	public Integer getFollowingCount() {
-		return followingCount;
-	}
+  public Integer getFollowingCount() {
+    return followingCount;
+  }
 
-	public void setFollowingCount(Integer followingCount) {
-		this.followingCount = followingCount;
-	}
+  public void setFollowingCount(Integer followingCount) {
+    this.followingCount = followingCount;
+  }
 
-	public Boolean getVerified() {
-		return verified;
-	}
+  public Boolean getVerified() {
+    return verified;
+  }
 
-	public void setVerified(Boolean verified) {
-		this.verified = verified;
-	}
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
 }

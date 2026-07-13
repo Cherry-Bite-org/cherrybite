@@ -10,8 +10,9 @@ import com.cherrybite.payload.response.ActivityResponse;
 
 public interface ActivityService {
 
-	void createActivity(User user, FoodPost foodPost, Comment comment, User followUser, ActivityType activityType);
+  void createActivity(User user, FoodPost foodPost, Comment comment, User followUser,
+      ActivityType activityType);
 
-	Page<ActivityResponse> getMyActivities(int page, int size);
+  Page<ActivityResponse> getMyActivities(int page, int size);
 
 }

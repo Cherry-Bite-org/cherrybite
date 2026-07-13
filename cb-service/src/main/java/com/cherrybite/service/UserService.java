@@ -15,22 +15,22 @@ import com.cherrybite.payload.response.UserSearchResponse;
 
 public interface UserService {
 
-	UserResponse getCurrentUser();
+  UserResponse getCurrentUser();
 
-	Optional<User> getUserByEmail(String email);
+  Optional<User> getUserByEmail(String email);
 
-	User getUserById(UUID userId);
+  User getUserById(UUID userId);
 
-	List<User> getAllUsers();
-	
-	String updateUserProfile(UpdateUser updateUser);
-	
-	String uploadProfileImage(MultipartFile file);
-	
-	String saveCurrentLocation(UpdateLocationRequest request);
-	
-	PublicUserProfileResponse getPublicUserProfile(String username);
-	
-	List<UserSearchResponse> searchUsers(String keyword);
+  List<User> getAllUsers();
+
+  String updateUserProfile(UpdateUser updateUser);
+
+  String uploadProfileImage(MultipartFile file);
+
+  String saveCurrentLocation(UpdateLocationRequest request);
+
+  PublicUserProfileResponse getPublicUserProfile(String username);
+
+  List<UserSearchResponse> searchUsers(String keyword);
 
 }

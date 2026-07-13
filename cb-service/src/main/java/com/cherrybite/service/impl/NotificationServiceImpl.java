@@ -25,114 +25,115 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
-	
-	private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
-	@Autowired
-	private NotificationRepository notificationRepository;
+  private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
+  @Autowired
+  private NotificationRepository notificationRepository;
 
-	@Override
-	public void createNotification(User receiver, User sender, FoodPost foodPost, Comment comment,
-			NotificationType type) {
-       
-		log.info("Create Notification Call");
-		if (receiver.getUserId().equals(sender.getUserId())) {
-			return;
-		}
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-		Notification notification = new Notification();
+  @Override
+  public void createNotification(User receiver, User sender, FoodPost foodPost, Comment comment,
+      NotificationType type) {
 
-		notification.setReceiver(receiver);
-		notification.setSender(sender);
-		notification.setFoodPost(foodPost);
-		notification.setComment(comment);
-		notification.setType(type);
+    log.info("Create Notification Call");
+    if (receiver.getUserId().equals(sender.getUserId())) {
+      return;
+    }
 
-		notificationRepository.save(notification);
-		log.info("Notification Created for type : {}",type);
-	}
+    Notification notification = new Notification();
 
-	@Override
-	public Page<NotificationResponse> getNotifications(int page, int size) {
+    notification.setReceiver(receiver);
+    notification.setSender(sender);
+    notification.setFoodPost(foodPost);
+    notification.setComment(comment);
+    notification.setType(type);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    notificationRepository.save(notification);
+    log.info("Notification Created for type : {}", type);
+  }
 
-		Pageable pageable = PageRequest.of(page, size);
+  @Override
+  public Page<NotificationResponse> getNotifications(int page, int size) {
 
-		Page<Notification> notifications = notificationRepository.findByReceiverOrderByCreatedAtDesc(currentUser,
-				pageable);
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		return notifications.map(this::mapNotificationResponse);
-	}
+    Pageable pageable = PageRequest.of(page, size);
 
-	private NotificationResponse mapNotificationResponse(Notification notification) {
+    Page<Notification> notifications =
+        notificationRepository.findByReceiverOrderByCreatedAtDesc(currentUser, pageable);
 
-		NotificationResponse response = new NotificationResponse();
+    return notifications.map(this::mapNotificationResponse);
+  }
 
-		response.setNotificationId(notification.getNotificationId());
+  private NotificationResponse mapNotificationResponse(Notification notification) {
 
-		response.setType(notification.getType());
+    NotificationResponse response = new NotificationResponse();
 
-		response.setIsRead(notification.getIsRead());
+    response.setNotificationId(notification.getNotificationId());
 
-		response.setCreatedAt(notification.getCreatedAt());
+    response.setType(notification.getType());
 
-		response.setSenderId(notification.getSender().getUserId());
+    response.setIsRead(notification.getIsRead());
 
-		response.setSenderUserName(notification.getSender().getUserName());
+    response.setCreatedAt(notification.getCreatedAt());
 
-		response.setSenderFullName(notification.getSender().getFullName());
+    response.setSenderId(notification.getSender().getUserId());
 
-		response.setSenderProfileImageUrl(notification.getSender().getProfileImageUrl());
+    response.setSenderUserName(notification.getSender().getUserName());
 
-		if (notification.getFoodPost() != null) {
-			response.setFoodPostId(notification.getFoodPost().getFoodPostId());
-		}
+    response.setSenderFullName(notification.getSender().getFullName());
 
-		if (notification.getComment() != null) {
-			response.setCommentId(notification.getComment().getCommentId());
-		}
+    response.setSenderProfileImageUrl(notification.getSender().getProfileImageUrl());
 
-		return response;
-	}
+    if (notification.getFoodPost() != null) {
+      response.setFoodPostId(notification.getFoodPost().getFoodPostId());
+    }
 
-	@Override
-	public String markAsRead(UUID notificationId) {
+    if (notification.getComment() != null) {
+      response.setCommentId(notification.getComment().getCommentId());
+    }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    return response;
+  }
 
-		Notification notification = notificationRepository.findByNotificationIdAndReceiver(notificationId, currentUser)
-				.orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
+  @Override
+  public String markAsRead(UUID notificationId) {
 
-		if (Boolean.TRUE.equals(notification.getIsRead())) {
-			throw new UserException("Notification already marked as read");
-		}
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		notification.setIsRead(true);
+    Notification notification =
+        notificationRepository.findByNotificationIdAndReceiver(notificationId, currentUser)
+            .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
 
-		notificationRepository.save(notification);
+    if (Boolean.TRUE.equals(notification.getIsRead())) {
+      throw new UserException("Notification already marked as read");
+    }
 
-		return "Notification marked as read";
-	}
+    notification.setIsRead(true);
 
-	@Override
-	@Transactional
-	public String markAllAsRead() {
-		User currentUser = userServiceImpl.getCurrentUserEntity();
-		notificationRepository.markAllAsRead(currentUser);
-		return "All notifications marked as read";
-	}
+    notificationRepository.save(notification);
 
-	@Override
-	public NotificationCountResponse getUnreadCount() {
+    return "Notification marked as read";
+  }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Override
+  @Transactional
+  public String markAllAsRead() {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
+    notificationRepository.markAllAsRead(currentUser);
+    return "All notifications marked as read";
+  }
 
-		long count = notificationRepository.countByReceiverAndIsReadFalse(currentUser);
+  @Override
+  public NotificationCountResponse getUnreadCount() {
 
-		return new NotificationCountResponse(count);
-	}
+    User currentUser = userServiceImpl.getCurrentUserEntity();
+
+    long count = notificationRepository.countByReceiverAndIsReadFalse(currentUser);
+
+    return new NotificationCountResponse(count);
+  }
 }

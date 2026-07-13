@@ -29,49 +29,47 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtValidator extends OncePerRequestFilter {
 
-	private final JwtProperties jwtProperties;
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final JwtProperties jwtProperties;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	public JwtValidator(JwtProperties jwtProperties, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-		this.jwtProperties = jwtProperties;
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-	}
+  public JwtValidator(JwtProperties jwtProperties,
+      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    this.jwtProperties = jwtProperties;
+    this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+  }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain filterChain) throws ServletException, IOException {
 
-		String jwt = request.getHeader(jwtProperties.getJwtHeader());
+    String jwt = request.getHeader(jwtProperties.getJwtHeader());
 
-		if (jwt != null) {
-			jwt = jwt.substring(7);
+    if (jwt != null) {
+      jwt = jwt.substring(7);
 
-			try {
-				SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getJwtSecret().getBytes());
-				Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload();
+      try {
+        SecretKey key = Keys.hmacShaKeyFor(jwtProperties.getJwtSecret().getBytes());
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload();
 
-				UUID userId = UUID.fromString(claims.get("userId", String.class));
-				UserRole role = UserRole.valueOf(claims.get("role", String.class));
-				String username = claims.get("username", String.class);
-				
-				CurrentUser currentUser = new CurrentUser(
-				        userId,
-				        username,
-				        role
-				);
+        UUID userId = UUID.fromString(claims.get("userId", String.class));
+        UserRole role = UserRole.valueOf(claims.get("role", String.class));
+        String username = claims.get("username", String.class);
 
-				List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
-				Authentication authentication  = new UsernamePasswordAuthenticationToken(currentUser, null, authorities);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			} catch (Exception e) {
-				jwtAuthenticationEntryPoint.commence(request, response,
-						new BadCredentialsException("Invalid JWT Token"));
-				return;
-			}
-		}
+        CurrentUser currentUser = new CurrentUser(userId, username, role);
 
-		filterChain.doFilter(request, response);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
+        Authentication authentication =
+            new UsernamePasswordAuthenticationToken(currentUser, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      } catch (Exception e) {
+        jwtAuthenticationEntryPoint.commence(request, response,
+            new BadCredentialsException("Invalid JWT Token"));
+        return;
+      }
+    }
 
-	}
+    filterChain.doFilter(request, response);
+
+  }
 
 }

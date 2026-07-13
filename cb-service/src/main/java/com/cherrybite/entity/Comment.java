@@ -24,122 +24,122 @@ import jakarta.persistence.Table;
 @Table(name = "comments")
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "comment_id")
-    private UUID commentId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "comment_id")
+  private UUID commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_post_id", nullable = false)
-    private FoodPost foodPost;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "food_post_id", nullable = false)
+  private FoodPost foodPost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
-    private Comment parentComment;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_comment_id")
+  private Comment parentComment;
 
-    @Column(name = "comment", nullable = false, length = 500)
-    private String comment;
+  @Column(name = "comment", nullable = false, length = 500)
+  private String comment;
 
-    @Column(name = "like_count")
-    private Long likeCount = 0L;
+  @Column(name = "like_count")
+  private Long likeCount = 0L;
 
-    @Column(name = "reply_count")
-    private Long replyCount = 0L;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private CommentStatus status = CommentStatus.ACTIVE;
+  @Column(name = "reply_count")
+  private Long replyCount = 0L;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status")
+  private CommentStatus status = CommentStatus.ACTIVE;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-	public UUID getCommentId() {
-		return commentId;
-	}
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-	public void setCommentId(UUID commentId) {
-		this.commentId = commentId;
-	}
+  public UUID getCommentId() {
+    return commentId;
+  }
 
-	public FoodPost getFoodPost() {
-		return foodPost;
-	}
+  public void setCommentId(UUID commentId) {
+    this.commentId = commentId;
+  }
 
-	public void setFoodPost(FoodPost foodPost) {
-		this.foodPost = foodPost;
-	}
+  public FoodPost getFoodPost() {
+    return foodPost;
+  }
 
-	public User getUser() {
-		return user;
-	}
+  public void setFoodPost(FoodPost foodPost) {
+    this.foodPost = foodPost;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public Comment getParentComment() {
-		return parentComment;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public void setParentComment(Comment parentComment) {
-		this.parentComment = parentComment;
-	}
+  public Comment getParentComment() {
+    return parentComment;
+  }
 
-	public String getComment() {
-		return comment;
-	}
+  public void setParentComment(Comment parentComment) {
+    this.parentComment = parentComment;
+  }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+  public String getComment() {
+    return comment;
+  }
 
-	public Long getLikeCount() {
-		return likeCount;
-	}
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 
-	public void setLikeCount(Long likeCount) {
-		this.likeCount = likeCount;
-	}
+  public Long getLikeCount() {
+    return likeCount;
+  }
 
-	public Long getReplyCount() {
-		return replyCount;
-	}
+  public void setLikeCount(Long likeCount) {
+    this.likeCount = likeCount;
+  }
 
-	public void setReplyCount(Long replyCount) {
-		this.replyCount = replyCount;
-	}
+  public Long getReplyCount() {
+    return replyCount;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public void setReplyCount(Long replyCount) {
+    this.replyCount = replyCount;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
 
-	public CommentStatus getStatus() {
-		return status;
-	}
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-	public void setStatus(CommentStatus status) {
-		this.status = status;
-	}
+  public CommentStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(CommentStatus status) {
+    this.status = status;
+  }
 
 }

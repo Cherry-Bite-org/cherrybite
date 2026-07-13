@@ -5,84 +5,84 @@ import java.util.UUID;
 
 public class UserSearchResponse {
 
-	private UUID userId;
+  private UUID userId;
 
-	private String username;
+  private String username;
 
-	private String profileImageUrl;
+  private String profileImageUrl;
 
-	private String fullName;
+  private String fullName;
 
-	private BigDecimal trustScore;
+  private BigDecimal trustScore;
 
-	private Boolean verified;
+  private Boolean verified;
 
-	private Boolean following;
-	
-	private Boolean isCurrentUser;
+  private Boolean following;
 
-	public String getUsername() {
-		return username;
-	}
+  private Boolean isCurrentUser;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+  public String getUsername() {
+    return username;
+  }
 
-	public String getProfileImageUrl() {
-		return profileImageUrl;
-	}
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-	public void setProfileImageUrl(String profileImageUrl) {
-		this.profileImageUrl = profileImageUrl;
-	}
+  public String getProfileImageUrl() {
+    return profileImageUrl;
+  }
 
-	public UUID getUserId() {
-		return userId;
-	}
+  public void setProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
+  }
 
-	public void setUserId(UUID userId) {
-		this.userId = userId;
-	}
+  public UUID getUserId() {
+    return userId;
+  }
 
-	public String getFullName() {
-		return fullName;
-	}
+  public void setUserId(UUID userId) {
+    this.userId = userId;
+  }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public BigDecimal getTrustScore() {
-		return trustScore;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public void setTrustScore(BigDecimal trustScore) {
-		this.trustScore = trustScore;
-	}
+  public BigDecimal getTrustScore() {
+    return trustScore;
+  }
 
-	public Boolean getVerified() {
-		return verified;
-	}
+  public void setTrustScore(BigDecimal trustScore) {
+    this.trustScore = trustScore;
+  }
 
-	public void setVerified(Boolean verified) {
-		this.verified = verified;
-	}
+  public Boolean getVerified() {
+    return verified;
+  }
 
-	public Boolean getFollowing() {
-		return following;
-	}
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
 
-	public void setFollowing(Boolean following) {
-		this.following = following;
-	}
+  public Boolean getFollowing() {
+    return following;
+  }
 
-	public Boolean getIsCurrentUser() {
-		return isCurrentUser;
-	}
+  public void setFollowing(Boolean following) {
+    this.following = following;
+  }
 
-	public void setIsCurrentUser(Boolean isCurrentUser) {
-		this.isCurrentUser = isCurrentUser;
-	}
+  public Boolean getIsCurrentUser() {
+    return isCurrentUser;
+  }
+
+  public void setIsCurrentUser(Boolean isCurrentUser) {
+    this.isCurrentUser = isCurrentUser;
+  }
 
 }

@@ -18,76 +18,77 @@ import com.cherrybite.service.ActivityService;
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
-	@Autowired
-	private ActivityRepository activityRepository;
+  @Autowired
+  private ActivityRepository activityRepository;
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-	@Override
-	public void createActivity(User user, FoodPost foodPost, Comment comment, User followUser,
-			ActivityType activityType) {
+  @Override
+  public void createActivity(User user, FoodPost foodPost, Comment comment, User followUser,
+      ActivityType activityType) {
 
-		Activity activity = new Activity();
+    Activity activity = new Activity();
 
-		activity.setUser(user);
-		activity.setFoodPost(foodPost);
-		activity.setComment(comment);
-		activity.setFollowUser(followUser);
-		activity.setActivityType(activityType);
+    activity.setUser(user);
+    activity.setFoodPost(foodPost);
+    activity.setComment(comment);
+    activity.setFollowUser(followUser);
+    activity.setActivityType(activityType);
 
-		activityRepository.save(activity);
+    activityRepository.save(activity);
 
-	}
+  }
 
-	@Override
-	public Page<ActivityResponse> getMyActivities(int page, int size) {
+  @Override
+  public Page<ActivityResponse> getMyActivities(int page, int size) {
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PageRequest.of(page, size);
 
-		Page<Activity> activities = activityRepository.findByUserOrderByCreatedAtDesc(currentUser, pageable);
+    Page<Activity> activities =
+        activityRepository.findByUserOrderByCreatedAtDesc(currentUser, pageable);
 
-		return activities.map(this::mapActivityResponse);
-	}
+    return activities.map(this::mapActivityResponse);
+  }
 
-	private ActivityResponse mapActivityResponse(Activity activity) {
+  private ActivityResponse mapActivityResponse(Activity activity) {
 
-		ActivityResponse response = new ActivityResponse();
+    ActivityResponse response = new ActivityResponse();
 
-		response.setActivityId(activity.getActivityId());
+    response.setActivityId(activity.getActivityId());
 
-		response.setActivityType(activity.getActivityType());
+    response.setActivityType(activity.getActivityType());
 
-		response.setCreatedAt(activity.getCreatedAt());
+    response.setCreatedAt(activity.getCreatedAt());
 
-		// Food Post
-		if (activity.getFoodPost() != null) {
+    // Food Post
+    if (activity.getFoodPost() != null) {
 
-			response.setFoodPostId(activity.getFoodPost().getFoodPostId());
+      response.setFoodPostId(activity.getFoodPost().getFoodPostId());
 
-			response.setFoodName(activity.getFoodPost().getFoodItem().getFoodName());
-		}
+      response.setFoodName(activity.getFoodPost().getFoodItem().getFoodName());
+    }
 
-		// Comment
-		if (activity.getComment() != null) {
+    // Comment
+    if (activity.getComment() != null) {
 
-			response.setCommentId(activity.getComment().getCommentId());
+      response.setCommentId(activity.getComment().getCommentId());
 
-			response.setComment(activity.getComment().getComment());
-		}
+      response.setComment(activity.getComment().getComment());
+    }
 
-		// Follow
-		if (activity.getFollowUser() != null) {
+    // Follow
+    if (activity.getFollowUser() != null) {
 
-			response.setFollowUserId(activity.getFollowUser().getUserId());
+      response.setFollowUserId(activity.getFollowUser().getUserId());
 
-			response.setFollowUserName(activity.getFollowUser().getUserName());
+      response.setFollowUserName(activity.getFollowUser().getUserName());
 
-			response.setFollowUserProfileImage(activity.getFollowUser().getProfileImageUrl());
-		}
+      response.setFollowUserProfileImage(activity.getFollowUser().getProfileImageUrl());
+    }
 
-		return response;
-	}
+    return response;
+  }
 }

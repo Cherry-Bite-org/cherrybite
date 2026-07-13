@@ -20,32 +20,32 @@ import com.cherrybite.service.FollowService;
 @RequestMapping("/follow")
 public class FollowController {
 
-	@Autowired
-	private FollowService followService;
+  @Autowired
+  private FollowService followService;
 
-	@PostMapping("/{username}")
-	public ResponseEntity<ApiResponse> followUser(@PathVariable String username) {
-		String message = followService.followUser(username);
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+  @PostMapping("/{username}")
+  public ResponseEntity<ApiResponse> followUser(@PathVariable String username) {
+    String message = followService.followUser(username);
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@DeleteMapping("/{username}/unfollow")
-	public ResponseEntity<ApiResponse> unfollowUser(@PathVariable String username) {
-		String message = followService.unfollowUser(username);
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+  @DeleteMapping("/{username}/unfollow")
+  public ResponseEntity<ApiResponse> unfollowUser(@PathVariable String username) {
+    String message = followService.unfollowUser(username);
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/{userId}/followers")
-	public ResponseEntity<List<FollowUserResponse>> getFollowers(@PathVariable UUID userId) {
-		return ResponseEntity.ok(followService.getFollowers(userId));
-	}
+  @GetMapping("/{userId}/followers")
+  public ResponseEntity<List<FollowUserResponse>> getFollowers(@PathVariable UUID userId) {
+    return ResponseEntity.ok(followService.getFollowers(userId));
+  }
 
-	@GetMapping("/{userId}/following")
-	public ResponseEntity<List<FollowUserResponse>> getFollowing(@PathVariable UUID userId) {
-		return ResponseEntity.ok(followService.getFollowing(userId));
-	}
+  @GetMapping("/{userId}/following")
+  public ResponseEntity<List<FollowUserResponse>> getFollowing(@PathVariable UUID userId) {
+    return ResponseEntity.ok(followService.getFollowing(userId));
+  }
 }

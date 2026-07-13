@@ -12,26 +12,26 @@ import com.cherrybite.entity.Place;
 
 public interface PlaceRepository extends JpaRepository<Place, UUID> {
 
-	boolean existsByNameIgnoreCaseAndAddressIgnoreCase(String name, String address);
+  boolean existsByNameIgnoreCaseAndAddressIgnoreCase(String name, String address);
 
-	@Query("""
-			SELECT p
-			FROM Place p
-			WHERE p.active = true
-			AND (
-			    LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-			    OR LOWER(p.address) LIKE LOWER(CONCAT('%', :keyword, '%'))
-			)
-			ORDER BY p.verified DESC,
-			         p.name ASC
-			""")
-	List<Place> searchPlaces(@Param("keyword") String keyword, Pageable pageable);
+  @Query("""
+      SELECT p
+      FROM Place p
+      WHERE p.active = true
+      AND (
+          LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+          OR LOWER(p.address) LIKE LOWER(CONCAT('%', :keyword, '%'))
+      )
+      ORDER BY p.verified DESC,
+               p.name ASC
+      """)
+  List<Place> searchPlaces(@Param("keyword") String keyword, Pageable pageable);
 
-	@Query("""
-			SELECT p
-			FROM Place p
-			WHERE p.active = true
-			""")
-	List<Place> findAllActivePlaces();
+  @Query("""
+      SELECT p
+      FROM Place p
+      WHERE p.active = true
+      """)
+  List<Place> findAllActivePlaces();
 
 }

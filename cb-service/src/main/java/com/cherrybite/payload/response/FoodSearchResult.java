@@ -4,53 +4,53 @@ import java.util.UUID;
 
 public class FoodSearchResult {
 
-	private UUID foodItemId;
+  private UUID foodItemId;
 
-    private String foodName;
+  private String foodName;
 
-    private String placeName;
-    
-    private UUID placeId;
+  private String placeName;
 
-    private Double averageRating;
+  private UUID placeId;
 
-	public UUID getPlaceId() {
-		return placeId;
-	}
+  private Double averageRating;
 
-	public void setPlaceId(UUID placeId) {
-		this.placeId = placeId;
-	}
+  public UUID getPlaceId() {
+    return placeId;
+  }
 
-	public UUID getFoodItemId() {
-		return foodItemId;
-	}
+  public void setPlaceId(UUID placeId) {
+    this.placeId = placeId;
+  }
 
-	public void setFoodItemId(UUID foodItemId) {
-		this.foodItemId = foodItemId;
-	}
+  public UUID getFoodItemId() {
+    return foodItemId;
+  }
 
-	public String getFoodName() {
-		return foodName;
-	}
+  public void setFoodItemId(UUID foodItemId) {
+    this.foodItemId = foodItemId;
+  }
 
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
-	}
+  public String getFoodName() {
+    return foodName;
+  }
 
-	public String getPlaceName() {
-		return placeName;
-	}
+  public void setFoodName(String foodName) {
+    this.foodName = foodName;
+  }
 
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
-	}
+  public String getPlaceName() {
+    return placeName;
+  }
 
-	public Double getAverageRating() {
-		return averageRating;
-	}
+  public void setPlaceName(String placeName) {
+    this.placeName = placeName;
+  }
 
-	public void setAverageRating(Double averageRating) {
-		this.averageRating = averageRating;
-	}
+  public Double getAverageRating() {
+    return averageRating;
+  }
+
+  public void setAverageRating(Double averageRating) {
+    this.averageRating = averageRating;
+  }
 }

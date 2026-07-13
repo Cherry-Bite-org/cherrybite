@@ -19,63 +19,63 @@ import jakarta.persistence.Table;
 @Table(name = "food_post_images")
 public class FoodPostImage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "image_id")
-    private UUID imageId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "image_id")
+  private UUID imageId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_post_id", nullable = false)
-    private FoodPost foodPost;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "food_post_id", nullable = false)
+  private FoodPost foodPost;
 
-    @Column(name = "image_url", nullable = false)
-    private String imageUrl;
+  @Column(name = "image_url", nullable = false)
+  private String imageUrl;
 
-    @Column(name = "display_order")
-    private Integer displayOrder;
+  @Column(name = "display_order")
+  private Integer displayOrder;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-	public UUID getImageId() {
-		return imageId;
-	}
+  public UUID getImageId() {
+    return imageId;
+  }
 
-	public void setImageId(UUID imageId) {
-		this.imageId = imageId;
-	}
+  public void setImageId(UUID imageId) {
+    this.imageId = imageId;
+  }
 
-	public FoodPost getFoodPost() {
-		return foodPost;
-	}
+  public FoodPost getFoodPost() {
+    return foodPost;
+  }
 
-	public void setFoodPost(FoodPost foodPost) {
-		this.foodPost = foodPost;
-	}
+  public void setFoodPost(FoodPost foodPost) {
+    this.foodPost = foodPost;
+  }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+  public String getImageUrl() {
+    return imageUrl;
+  }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
 
-	public Integer getDisplayOrder() {
-		return displayOrder;
-	}
+  public Integer getDisplayOrder() {
+    return displayOrder;
+  }
 
-	public void setDisplayOrder(Integer displayOrder) {
-		this.displayOrder = displayOrder;
-	}
+  public void setDisplayOrder(Integer displayOrder) {
+    this.displayOrder = displayOrder;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
 }

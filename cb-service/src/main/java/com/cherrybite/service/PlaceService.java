@@ -12,13 +12,14 @@ import com.cherrybite.payload.response.PlaceSearchResponse;
 
 public interface PlaceService {
 
-	CreatePlaceResponse createPlace(CreatePlaceRequest request);
+  CreatePlaceResponse createPlace(CreatePlaceRequest request);
 
-	List<PlaceSearchResponse> searchPlaces(String keyword, BigDecimal latitude, BigDecimal longitude);
+  List<PlaceSearchResponse> searchPlaces(String keyword, BigDecimal latitude, BigDecimal longitude);
 
-	PlaceResponse getPlaceDetails(UUID placeId);
+  PlaceResponse getPlaceDetails(UUID placeId);
 
-	List<PlaceSearchResponse> getNearbyPlaces(BigDecimal latitude, BigDecimal longitude, Double radius);
-	
-	String updatePlace(UUID placeId, UpdatePlaceRequest request);
+  List<PlaceSearchResponse> getNearbyPlaces(BigDecimal latitude, BigDecimal longitude,
+      Double radius);
+
+  String updatePlace(UUID placeId, UpdatePlaceRequest request);
 }
