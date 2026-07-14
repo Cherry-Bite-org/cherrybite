@@ -24,35 +24,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotificationController {
 
-	@Autowired
-	private NotificationService notificationService;
+  @Autowired
+  private NotificationService notificationService;
 
-	@GetMapping
-	public ResponseEntity<Page<NotificationResponse>> getNotifications(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "20") int size) {
-		return ResponseEntity.ok(notificationService.getNotifications(page, size));
-	}
+  @GetMapping
+  public ResponseEntity<Page<NotificationResponse>> getNotifications(
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    return ResponseEntity.ok(notificationService.getNotifications(page, size));
+  }
 
-	@PutMapping("/{notificationId}/read")
-	public ResponseEntity<ApiResponse> markAsRead(@PathVariable UUID notificationId) {
-		String message = notificationService.markAsRead(notificationId);
+  @PutMapping("/{notificationId}/read")
+  public ResponseEntity<ApiResponse> markAsRead(@PathVariable UUID notificationId) {
+    String message = notificationService.markAsRead(notificationId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@PutMapping("/read-all")
-	public ResponseEntity<ApiResponse> markAllAsRead() {
-		String message = notificationService.markAllAsRead();
+  @PutMapping("/read-all")
+  public ResponseEntity<ApiResponse> markAllAsRead() {
+    String message = notificationService.markAllAsRead();
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/unread-count")
-	public ResponseEntity<NotificationCountResponse> getUnreadCount() {
-		return ResponseEntity.ok(notificationService.getUnreadCount());
-	}
+  @GetMapping("/unread-count")
+  public ResponseEntity<NotificationCountResponse> getUnreadCount() {
+    return ResponseEntity.ok(notificationService.getUnreadCount());
+  }
 }

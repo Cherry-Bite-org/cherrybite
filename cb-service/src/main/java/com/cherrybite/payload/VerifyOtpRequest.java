@@ -2,23 +2,23 @@ package com.cherrybite.payload;
 
 public class VerifyOtpRequest {
 
-	private String identifier;
-	
-    private String otp;
+  private String identifier;
 
-	public String getIdentifier() {
-		return identifier;
-	}
+  private String otp;
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
+  public String getIdentifier() {
+    return identifier;
+  }
 
-	public String getOtp() {
-		return otp;
-	}
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
 
-	public void setOtp(String otp) {
-		this.otp = otp;
-	}
+  public String getOtp() {
+    return otp;
+  }
+
+  public void setOtp(String otp) {
+    this.otp = otp;
+  }
 }

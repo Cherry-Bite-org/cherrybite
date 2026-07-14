@@ -6,74 +6,74 @@ import java.util.UUID;
 
 public class CommentResponse {
 
-    private UUID commentId;
+  private UUID commentId;
 
-    private String comment;
+  private String comment;
 
-    private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-    private CommentUserResponse user;
+  private CommentUserResponse user;
 
-    private Long likeCount;
+  private Long likeCount;
 
-    private Long replyCount;
+  private Long replyCount;
 
-    private List<ReplyResponse> replies;
+  private List<ReplyResponse> replies;
 
-	public UUID getCommentId() {
-		return commentId;
-	}
+  public UUID getCommentId() {
+    return commentId;
+  }
 
-	public void setCommentId(UUID commentId) {
-		this.commentId = commentId;
-	}
+  public void setCommentId(UUID commentId) {
+    this.commentId = commentId;
+  }
 
-	public String getComment() {
-		return comment;
-	}
+  public String getComment() {
+    return comment;
+  }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	public CommentUserResponse getUser() {
-		return user;
-	}
+  public CommentUserResponse getUser() {
+    return user;
+  }
 
-	public void setUser(CommentUserResponse user) {
-		this.user = user;
-	}
+  public void setUser(CommentUserResponse user) {
+    this.user = user;
+  }
 
-	public Long getLikeCount() {
-		return likeCount;
-	}
+  public Long getLikeCount() {
+    return likeCount;
+  }
 
-	public void setLikeCount(Long likeCount) {
-		this.likeCount = likeCount;
-	}
+  public void setLikeCount(Long likeCount) {
+    this.likeCount = likeCount;
+  }
 
-	public Long getReplyCount() {
-		return replyCount;
-	}
+  public Long getReplyCount() {
+    return replyCount;
+  }
 
-	public void setReplyCount(Long replyCount) {
-		this.replyCount = replyCount;
-	}
+  public void setReplyCount(Long replyCount) {
+    this.replyCount = replyCount;
+  }
 
-	public List<ReplyResponse> getReplies() {
-		return replies;
-	}
+  public List<ReplyResponse> getReplies() {
+    return replies;
+  }
 
-	public void setReplies(List<ReplyResponse> replies) {
-		this.replies = replies;
-	}
+  public void setReplies(List<ReplyResponse> replies) {
+    this.replies = replies;
+  }
 
 }

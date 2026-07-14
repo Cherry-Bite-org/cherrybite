@@ -14,13 +14,13 @@ import com.cherrybite.service.FoodPostService;
 @RestController
 @RequestMapping("/home")
 public class HomeController {
-	
-	@Autowired
-	private FoodPostService foodPostService;
 
-	@GetMapping("/feed")
-	public ResponseEntity<Page<FeedResponse>> getFeed(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
-		return ResponseEntity.ok(foodPostService.getFeed(page, size));
-	}
+  @Autowired
+  private FoodPostService foodPostService;
+
+  @GetMapping("/feed")
+  public ResponseEntity<Page<FeedResponse>> getFeed(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    return ResponseEntity.ok(foodPostService.getFeed(page, size));
+  }
 }

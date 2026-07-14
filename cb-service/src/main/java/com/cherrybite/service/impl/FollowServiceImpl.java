@@ -24,140 +24,133 @@ import com.cherrybite.service.NotificationService;
 
 @Service
 public class FollowServiceImpl implements FollowService {
-	
-	private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
-	
-	@Autowired
-	private NotificationService notificationService;
+  private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-	@Autowired
-	private FollowRepository followRepository;
-	
-	@Autowired
-	private ActivityService activityService;
+  @Autowired
+  private NotificationService notificationService;
 
-	@Override
-	public String followUser(String username) {
+  @Autowired
+  private UserRepository userRepository;
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Autowired
+  private FollowRepository followRepository;
 
-		User targetUser = userRepository.findByUserName(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+  @Autowired
+  private ActivityService activityService;
 
-		if (currentUser.getUserId().equals(targetUser.getUserId())) {
-			throw new UserException("You cannot follow yourself");
-		}
+  @Override
+  public String followUser(String username) {
 
-		boolean alreadyFollowing = followRepository.existsByFollowerAndFollowing(currentUser, targetUser);
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		if (alreadyFollowing) {
-			throw new UserException("Already following this user");
-		}
+    User targetUser = userRepository.findByUserName(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-		Follow follow = new Follow();
-		follow.setFollower(currentUser);
-		follow.setFollowing(targetUser);
-		follow.setCreatedAt(LocalDateTime.now());
+    if (currentUser.getUserId().equals(targetUser.getUserId())) {
+      throw new UserException("You cannot follow yourself");
+    }
 
-		followRepository.save(follow);
-		
-		activityService.createActivity(
-		        currentUser,
-		        null,
-		        null,
-		        targetUser,
-		        ActivityType.FOLLOW);
-		
-		try {
-		notificationService.createNotification(
-				targetUser,
-		        currentUser,
-		        null,
-		        null,
-		        NotificationType.FOLLOW);
-		} catch (Exception e) {
-		    log.error("Failed to create follow notification", e);
-		}
-		return "User followed successfully";
-	}
+    boolean alreadyFollowing =
+        followRepository.existsByFollowerAndFollowing(currentUser, targetUser);
 
-	@Override
-	public String unfollowUser(String username) {
+    if (alreadyFollowing) {
+      throw new UserException("Already following this user");
+    }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    Follow follow = new Follow();
+    follow.setFollower(currentUser);
+    follow.setFollowing(targetUser);
+    follow.setCreatedAt(LocalDateTime.now());
 
-		User targetUser = userRepository.findByUserName(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    followRepository.save(follow);
 
-		Follow follow = followRepository.findByFollowerAndFollowing(currentUser, targetUser)
-				.orElseThrow(() -> new UserException("You are not following this user"));
+    activityService.createActivity(currentUser, null, null, targetUser, ActivityType.FOLLOW);
 
-		followRepository.delete(follow);
+    try {
+      notificationService.createNotification(targetUser, currentUser, null, null,
+          NotificationType.FOLLOW);
+    } catch (Exception e) {
+      log.error("Failed to create follow notification", e);
+    }
+    return "User followed successfully";
+  }
 
-		return "User unfollowed successfully";
-	}
+  @Override
+  public String unfollowUser(String username) {
 
-	@Override
-	public List<FollowUserResponse> getFollowers(UUID userId) {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    User targetUser = userRepository.findByUserName(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-		User user = userServiceImpl.getUserById(userId);
+    Follow follow = followRepository.findByFollowerAndFollowing(currentUser, targetUser)
+        .orElseThrow(() -> new UserException("You are not following this user"));
 
-		List<Follow> followers = followRepository.findByFollowing(user);
+    followRepository.delete(follow);
 
-		return followers.stream().map(follow -> {
+    return "User unfollowed successfully";
+  }
 
-			User follower = follow.getFollower();
+  @Override
+  public List<FollowUserResponse> getFollowers(UUID userId) {
 
-			FollowUserResponse response = new FollowUserResponse();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			response.setUserId(follower.getUserId());
-			response.setUserName(follower.getUserName());
-			response.setFullName(follower.getFullName());
-			response.setProfileImageUrl(follower.getProfileImageUrl());
-			response.setVerified(follower.getIsVerified());
-			response.setTrustScore(follower.getTrustScore());
+    User user = userServiceImpl.getUserById(userId);
 
-			response.setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, follower));
+    List<Follow> followers = followRepository.findByFollowing(user);
 
-			return response;
+    return followers.stream().map(follow -> {
 
-		}).toList();
-	}
+      User follower = follow.getFollower();
 
-	@Override
-	public List<FollowUserResponse> getFollowing(UUID userId) {
+      FollowUserResponse response = new FollowUserResponse();
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+      response.setUserId(follower.getUserId());
+      response.setUserName(follower.getUserName());
+      response.setFullName(follower.getFullName());
+      response.setProfileImageUrl(follower.getProfileImageUrl());
+      response.setVerified(follower.getIsVerified());
+      response.setTrustScore(follower.getTrustScore());
 
-		User user = userServiceImpl.getUserById(userId);
+      response.setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, follower));
 
-		List<Follow> following = followRepository.findByFollower(user);
+      return response;
 
-		return following.stream().map(follow -> {
+    }).toList();
+  }
 
-			User followingUser = follow.getFollowing();
+  @Override
+  public List<FollowUserResponse> getFollowing(UUID userId) {
 
-			FollowUserResponse response = new FollowUserResponse();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			response.setUserId(followingUser.getUserId());
-			response.setUserName(followingUser.getUserName());
-			response.setFullName(followingUser.getFullName());
-			response.setProfileImageUrl(followingUser.getProfileImageUrl());
-			response.setVerified(followingUser.getIsVerified());
-			response.setTrustScore(followingUser.getTrustScore());
+    User user = userServiceImpl.getUserById(userId);
 
-			response.setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, followingUser));
+    List<Follow> following = followRepository.findByFollower(user);
 
-			return response;
+    return following.stream().map(follow -> {
 
-		}).toList();
-	}
+      User followingUser = follow.getFollowing();
+
+      FollowUserResponse response = new FollowUserResponse();
+
+      response.setUserId(followingUser.getUserId());
+      response.setUserName(followingUser.getUserName());
+      response.setFullName(followingUser.getFullName());
+      response.setProfileImageUrl(followingUser.getProfileImageUrl());
+      response.setVerified(followingUser.getIsVerified());
+      response.setTrustScore(followingUser.getTrustScore());
+
+      response
+          .setFollowing(followRepository.existsByFollowerAndFollowing(currentUser, followingUser));
+
+      return response;
+
+    }).toList();
+  }
 }

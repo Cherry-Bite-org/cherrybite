@@ -4,5 +4,5 @@ import com.cherrybite.payload.response.SearchResponse;
 
 public interface SearchService {
 
-	SearchResponse search(String keyword);
+  SearchResponse search(String keyword);
 }

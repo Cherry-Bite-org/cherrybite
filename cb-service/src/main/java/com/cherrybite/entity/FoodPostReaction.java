@@ -21,77 +21,69 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(
-    name = "food_post_reactions",
-    schema = "cb",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-            "food_post_id",
-            "user_id"
-        })
-    }
-)
+@Table(name = "food_post_reactions", schema = "cb",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"food_post_id", "user_id"})})
 public class FoodPostReaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "reaction_id")
-    private UUID reactionId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "reaction_id")
+  private UUID reactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_post_id", nullable = false)
-    private FoodPost foodPost;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "food_post_id", nullable = false)
+  private FoodPost foodPost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "reaction_type", nullable = false)
-    private FoodReactionType reactionType;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "reaction_type", nullable = false)
+  private FoodReactionType reactionType;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-	public UUID getReactionId() {
-		return reactionId;
-	}
+  public UUID getReactionId() {
+    return reactionId;
+  }
 
-	public void setReactionId(UUID reactionId) {
-		this.reactionId = reactionId;
-	}
+  public void setReactionId(UUID reactionId) {
+    this.reactionId = reactionId;
+  }
 
-	public FoodPost getFoodPost() {
-		return foodPost;
-	}
+  public FoodPost getFoodPost() {
+    return foodPost;
+  }
 
-	public void setFoodPost(FoodPost foodPost) {
-		this.foodPost = foodPost;
-	}
+  public void setFoodPost(FoodPost foodPost) {
+    this.foodPost = foodPost;
+  }
 
-	public User getUser() {
-		return user;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public FoodReactionType getReactionType() {
-		return reactionType;
-	}
+  public FoodReactionType getReactionType() {
+    return reactionType;
+  }
 
-	public void setReactionType(FoodReactionType reactionType) {
-		this.reactionType = reactionType;
-	}
+  public void setReactionType(FoodReactionType reactionType) {
+    this.reactionType = reactionType;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
 }

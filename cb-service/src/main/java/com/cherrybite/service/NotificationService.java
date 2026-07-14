@@ -13,14 +13,15 @@ import com.cherrybite.payload.response.NotificationResponse;
 
 public interface NotificationService {
 
-	void createNotification(User receiver, User sender, FoodPost foodPost, Comment comment, NotificationType type);
-	
-	Page<NotificationResponse> getNotifications(int page, int size);
-	
-	String markAsRead(UUID notificationId);
-	
-	String markAllAsRead();
-	
-	NotificationCountResponse getUnreadCount();
+  void createNotification(User receiver, User sender, FoodPost foodPost, Comment comment,
+      NotificationType type);
+
+  Page<NotificationResponse> getNotifications(int page, int size);
+
+  String markAsRead(UUID notificationId);
+
+  String markAllAsRead();
+
+  NotificationCountResponse getUnreadCount();
 
 }

@@ -14,77 +14,77 @@ import jakarta.persistence.Table;
 @Table(name = "otp_verifications")
 public class OtpVerification {
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID otpId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID otpId;
 
-    private String identifier;
+  private String identifier;
 
-    private String otp;
+  private String otp;
 
-    private Boolean verified;
+  private Boolean verified;
 
-    private LocalDateTime expiresAt;
+  private LocalDateTime expiresAt;
 
-    private LocalDateTime createdAt;
-    
-    @Column(unique = true)
-    private String temporaryToken;
+  private LocalDateTime createdAt;
 
-	public UUID getOtpId() {
-		return otpId;
-	}
+  @Column(unique = true)
+  private String temporaryToken;
 
-	public void setOtpId(UUID otpId) {
-		this.otpId = otpId;
-	}
+  public UUID getOtpId() {
+    return otpId;
+  }
 
-	public String getIdentifier() {
-		return identifier;
-	}
+  public void setOtpId(UUID otpId) {
+    this.otpId = otpId;
+  }
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
+  public String getIdentifier() {
+    return identifier;
+  }
 
-	public String getOtp() {
-		return otp;
-	}
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
 
-	public void setOtp(String otp) {
-		this.otp = otp;
-	}
+  public String getOtp() {
+    return otp;
+  }
 
-	public Boolean getVerified() {
-		return verified;
-	}
+  public void setOtp(String otp) {
+    this.otp = otp;
+  }
 
-	public void setVerified(Boolean verified) {
-		this.verified = verified;
-	}
+  public Boolean getVerified() {
+    return verified;
+  }
 
-	public LocalDateTime getExpiresAt() {
-		return expiresAt;
-	}
+  public void setVerified(Boolean verified) {
+    this.verified = verified;
+  }
 
-	public void setExpiresAt(LocalDateTime expiresAt) {
-		this.expiresAt = expiresAt;
-	}
+  public LocalDateTime getExpiresAt() {
+    return expiresAt;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public void setExpiresAt(LocalDateTime expiresAt) {
+    this.expiresAt = expiresAt;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public String getTemporaryToken() {
-		return temporaryToken;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	public void setTemporaryToken(String temporaryToken) {
-		this.temporaryToken = temporaryToken;
-	}
-	
+  public String getTemporaryToken() {
+    return temporaryToken;
+  }
+
+  public void setTemporaryToken(String temporaryToken) {
+    this.temporaryToken = temporaryToken;
+  }
+
 }

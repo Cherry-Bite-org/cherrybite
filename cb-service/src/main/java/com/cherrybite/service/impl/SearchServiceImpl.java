@@ -23,80 +23,80 @@ import com.cherrybite.service.SearchService;
 @Service
 public class SearchServiceImpl implements SearchService {
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-	@Autowired
-	private PlaceRepository placeRepository;
+  @Autowired
+  private PlaceRepository placeRepository;
 
-	@Autowired
-	private FoodItemRepository foodItemRepository;
+  @Autowired
+  private FoodItemRepository foodItemRepository;
 
-	@Override
-	public SearchResponse search(String keyword) {
+  @Override
+  public SearchResponse search(String keyword) {
 
-		if (keyword == null || keyword.isBlank()) {
-			throw new UserException("Keyword is required");
-		}
+    if (keyword == null || keyword.isBlank()) {
+      throw new UserException("Keyword is required");
+    }
 
-		keyword = keyword.trim();
+    keyword = keyword.trim();
 
-		Pageable pageable = PageRequest.of(0, 10);
+    Pageable pageable = PageRequest.of(0, 10);
 
-		List<FoodItem> foods = foodItemRepository.searchFoods(keyword, pageable);
+    List<FoodItem> foods = foodItemRepository.searchFoods(keyword, pageable);
 
-		List<Place> places = placeRepository.searchPlaces(keyword, pageable);
+    List<Place> places = placeRepository.searchPlaces(keyword, pageable);
 
-		List<User> users = userRepository.searchUsers(keyword, pageable);
+    List<User> users = userRepository.searchUsers(keyword, pageable);
 
-		SearchResponse response = new SearchResponse();
+    SearchResponse response = new SearchResponse();
 
-		response.setFoods(foods.stream().map(this::mapFood).toList());
+    response.setFoods(foods.stream().map(this::mapFood).toList());
 
-		response.setPlaces(places.stream().map(this::mapPlace).toList());
+    response.setPlaces(places.stream().map(this::mapPlace).toList());
 
-		response.setUsers(users.stream().map(this::mapUser).toList());
+    response.setUsers(users.stream().map(this::mapUser).toList());
 
-		return response;
-	}
-	
-	private FoodSearchResult mapFood(FoodItem foodItem) {
+    return response;
+  }
 
-	    FoodSearchResult response = new FoodSearchResult();
+  private FoodSearchResult mapFood(FoodItem foodItem) {
 
-	    response.setFoodItemId(foodItem.getFoodItemId());
-	    response.setFoodName(foodItem.getFoodName());
+    FoodSearchResult response = new FoodSearchResult();
 
-	    response.setPlaceId(foodItem.getPlace().getPlaceId());
-	    response.setPlaceName(foodItem.getPlace().getName());
+    response.setFoodItemId(foodItem.getFoodItemId());
+    response.setFoodName(foodItem.getFoodName());
 
-	    // TODO: Calculate average from FoodPosts later
-	    response.setAverageRating(0.0);
+    response.setPlaceId(foodItem.getPlace().getPlaceId());
+    response.setPlaceName(foodItem.getPlace().getName());
 
-	    return response;
-	}
+    // TODO: Calculate average from FoodPosts later
+    response.setAverageRating(0.0);
 
-	private PlaceSearchResult mapPlace(Place place) {
+    return response;
+  }
 
-	    PlaceSearchResult response = new PlaceSearchResult();
+  private PlaceSearchResult mapPlace(Place place) {
 
-	    response.setPlaceId(place.getPlaceId());
-	    response.setName(place.getName());
-	    response.setAddress(place.getAddress());
+    PlaceSearchResult response = new PlaceSearchResult();
 
-	    return response;
-	}
-	
-	private UserSearchResult mapUser(User user) {
+    response.setPlaceId(place.getPlaceId());
+    response.setName(place.getName());
+    response.setAddress(place.getAddress());
 
-	    UserSearchResult response = new UserSearchResult();
+    return response;
+  }
 
-	    response.setUserId(user.getUserId());
-	    response.setUserName(user.getUserName());
-	    response.setFullName(user.getFullName());
-	    response.setProfileImageUrl(user.getProfileImageUrl());
-	    response.setVerified(user.getIsVerified());
+  private UserSearchResult mapUser(User user) {
 
-	    return response;
-	}
+    UserSearchResult response = new UserSearchResult();
+
+    response.setUserId(user.getUserId());
+    response.setUserName(user.getUserName());
+    response.setFullName(user.getFullName());
+    response.setProfileImageUrl(user.getProfileImageUrl());
+    response.setVerified(user.getIsVerified());
+
+    return response;
+  }
 }

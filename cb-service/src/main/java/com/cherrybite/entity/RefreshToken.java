@@ -18,78 +18,78 @@ import jakarta.persistence.Table;
 @Table(name = "refresh_tokens")
 public class RefreshToken {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID tokenId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID tokenId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @Column(unique = true, nullable = false)
-    private String token;
+  @Column(unique = true, nullable = false)
+  private String token;
 
-    private LocalDateTime expiresAt;
+  private LocalDateTime expiresAt;
 
-    private Boolean revoked;
+  private Boolean revoked;
 
-    private LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-    @PrePersist
-    public void prePersist() {
+  @PrePersist
+  public void prePersist() {
 
-        createdAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
 
-        if (revoked == null) {
-            revoked = false;
-        }
+    if (revoked == null) {
+      revoked = false;
     }
+  }
 
-	public UUID getTokenId() {
-		return tokenId;
-	}
+  public UUID getTokenId() {
+    return tokenId;
+  }
 
-	public void setTokenId(UUID tokenId) {
-		this.tokenId = tokenId;
-	}
+  public void setTokenId(UUID tokenId) {
+    this.tokenId = tokenId;
+  }
 
-	public User getUser() {
-		return user;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public String getToken() {
-		return token;
-	}
+  public String getToken() {
+    return token;
+  }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-	public LocalDateTime getExpiresAt() {
-		return expiresAt;
-	}
+  public LocalDateTime getExpiresAt() {
+    return expiresAt;
+  }
 
-	public void setExpiresAt(LocalDateTime expiresAt) {
-		this.expiresAt = expiresAt;
-	}
+  public void setExpiresAt(LocalDateTime expiresAt) {
+    this.expiresAt = expiresAt;
+  }
 
-	public Boolean getRevoked() {
-		return revoked;
-	}
+  public Boolean getRevoked() {
+    return revoked;
+  }
 
-	public void setRevoked(Boolean revoked) {
-		this.revoked = revoked;
-	}
+  public void setRevoked(Boolean revoked) {
+    this.revoked = revoked;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }

@@ -12,18 +12,18 @@ import com.cherrybite.entity.User;
 
 public interface FollowRepository extends JpaRepository<Follow, UUID> {
 
-	@Query("""
-			    SELECT f.following.userId
-			    FROM Follow f
-			    WHERE f.follower.userId = :userId
-			""")
-	List<UUID> findFollowingIds(UUID userId);
+  @Query("""
+          SELECT f.following.userId
+          FROM Follow f
+          WHERE f.follower.userId = :userId
+      """)
+  List<UUID> findFollowingIds(UUID userId);
 
-	boolean existsByFollowerAndFollowing(User follower, User following);
-	
-	Optional<Follow> findByFollowerAndFollowing(User follower, User following);
-	
-	List<Follow> findByFollowing(User following);
-	
-	List<Follow> findByFollower(User follower);
+  boolean existsByFollowerAndFollowing(User follower, User following);
+
+  Optional<Follow> findByFollowerAndFollowing(User follower, User following);
+
+  List<Follow> findByFollowing(User following);
+
+  List<Follow> findByFollower(User follower);
 }

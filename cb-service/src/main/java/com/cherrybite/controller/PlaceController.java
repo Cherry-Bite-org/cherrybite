@@ -26,34 +26,33 @@ import jakarta.validation.Valid;
 @RequestMapping("/places")
 public class PlaceController {
 
-	@Autowired
-	private PlaceService placeService;
+  @Autowired
+  private PlaceService placeService;
 
-	@PostMapping
-	public ResponseEntity<CreatePlaceResponse> createPlace(@Valid @RequestBody CreatePlaceRequest request) {
-		return ResponseEntity.ok(placeService.createPlace(request));
-	}
+  @PostMapping
+  public ResponseEntity<CreatePlaceResponse> createPlace(
+      @Valid @RequestBody CreatePlaceRequest request) {
+    return ResponseEntity.ok(placeService.createPlace(request));
+  }
 
-	@GetMapping("/search")
-	public ResponseEntity<List<PlaceSearchResponse>> searchPlaces(@RequestParam String keyword,
-			@RequestParam(required = false) BigDecimal latitude, @RequestParam(required = false) BigDecimal longitude) {
-		return ResponseEntity.ok(placeService.searchPlaces(keyword, latitude, longitude));
-	}
+  @GetMapping("/search")
+  public ResponseEntity<List<PlaceSearchResponse>> searchPlaces(@RequestParam String keyword,
+      @RequestParam(required = false) BigDecimal latitude,
+      @RequestParam(required = false) BigDecimal longitude) {
+    return ResponseEntity.ok(placeService.searchPlaces(keyword, latitude, longitude));
+  }
 
-	@GetMapping("/{placeId}")
-	public ResponseEntity<PlaceResponse> getPlaceDetails(@PathVariable UUID placeId) {
-		return ResponseEntity.ok(placeService.getPlaceDetails(placeId));
-	}
-	
-	@GetMapping("/nearby")
-	public ResponseEntity<List<PlaceSearchResponse>> getNearbyPlaces(
-	        @RequestParam BigDecimal latitude,
-	        @RequestParam BigDecimal longitude,
-	        @RequestParam(defaultValue = "5") Double radius) {
+  @GetMapping("/{placeId}")
+  public ResponseEntity<PlaceResponse> getPlaceDetails(@PathVariable UUID placeId) {
+    return ResponseEntity.ok(placeService.getPlaceDetails(placeId));
+  }
 
-	    return ResponseEntity.ok(
-	            placeService.getNearbyPlaces(latitude, longitude, radius)
-	    );
-	}
+  @GetMapping("/nearby")
+  public ResponseEntity<List<PlaceSearchResponse>> getNearbyPlaces(
+      @RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude,
+      @RequestParam(defaultValue = "5") Double radius) {
+
+    return ResponseEntity.ok(placeService.getNearbyPlaces(latitude, longitude, radius));
+  }
 
 }

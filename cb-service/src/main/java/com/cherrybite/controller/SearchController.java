@@ -14,12 +14,12 @@ import com.cherrybite.service.SearchService;
 @RequestMapping("/search")
 public class SearchController {
 
-	@Autowired
-	private SearchService searchService;
+  @Autowired
+  private SearchService searchService;
 
-	@GetMapping
-	public ResponseEntity<SearchResponse> search(@RequestParam String keyword) {
-		return ResponseEntity.ok(searchService.search(keyword));
-	}
+  @GetMapping
+  public ResponseEntity<SearchResponse> search(@RequestParam String keyword) {
+    return ResponseEntity.ok(searchService.search(keyword));
+  }
 
 }

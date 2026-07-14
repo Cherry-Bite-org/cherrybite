@@ -2,54 +2,54 @@ package com.cherrybite.payload.response;
 
 public class VerifyOtpResponse {
 
-	private boolean newUser;
-	
-    private String accessToken;
-    
-    private String temporaryToken;
-    
-    private String message;
-    
-    private String refreshToken;
+  private boolean newUser;
 
-	public boolean isNewUser() {
-		return newUser;
-	}
+  private String accessToken;
 
-	public void setNewUser(boolean newUser) {
-		this.newUser = newUser;
-	}
+  private String temporaryToken;
 
-	public String getAccessToken() {
-		return accessToken;
-	}
+  private String message;
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+  private String refreshToken;
 
-	public String getTemporaryToken() {
-		return temporaryToken;
-	}
+  public boolean isNewUser() {
+    return newUser;
+  }
 
-	public void setTemporaryToken(String temporaryToken) {
-		this.temporaryToken = temporaryToken;
-	}
+  public void setNewUser(boolean newUser) {
+    this.newUser = newUser;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
+  }
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+  public String getTemporaryToken() {
+    return temporaryToken;
+  }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-    
+  public void setTemporaryToken(String temporaryToken) {
+    this.temporaryToken = temporaryToken;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
 }

@@ -18,48 +18,45 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final JwtValidator jwtValidator;
+  private final JwtValidator jwtValidator;
 
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	public SecurityConfig(JwtValidator jwtValidator, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-		this.jwtValidator = jwtValidator;
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-	}
+  public SecurityConfig(JwtValidator jwtValidator,
+      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    this.jwtValidator = jwtValidator;
+    this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+  }
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		return http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(
-						/* Public APIs */
-				        "/auth/**",
-				        "/uploads/**",
-				        "/swagger-ui/**",
-				        "/v3/api-docs/**",
-				        "/swagger-ui.html"
-				).permitAll()
-						/* ADMIN APIs */
-				.requestMatchers("/admin/**")
-				.hasRole("ADMIN")
-				.anyRequest()
-				.authenticated())
-				.addFilterBefore(jwtValidator, BasicAuthenticationFilter.class).csrf(AbstractHttpConfigurer::disable)
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-				.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)).build();
-	}
+    return http
+        .sessionManagement(
+            management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(authorize -> authorize.requestMatchers(
+            /* Public APIs */
+            "/auth/**", "/uploads/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+            .permitAll()
+            /* ADMIN APIs */
+            .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
+        .addFilterBefore(jwtValidator, BasicAuthenticationFilter.class)
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)).build();
+  }
 
-	private CorsConfigurationSource corsConfigurationSource() {
-		return request -> {
-			CorsConfiguration corsConfiguration = new CorsConfiguration();
-			corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4000"));
-			corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-			corsConfiguration.setAllowCredentials(true);
-			corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-			corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
-			corsConfiguration.setMaxAge(3600L);
-			return corsConfiguration;
-		};
-	}
+  private CorsConfigurationSource corsConfigurationSource() {
+    return request -> {
+      CorsConfiguration corsConfiguration = new CorsConfiguration();
+      corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4000"));
+      corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+      corsConfiguration.setAllowCredentials(true);
+      corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+      corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
+      corsConfiguration.setMaxAge(3600L);
+      return corsConfiguration;
+    };
+  }
 
 }

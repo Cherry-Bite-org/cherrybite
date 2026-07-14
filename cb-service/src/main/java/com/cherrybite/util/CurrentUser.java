@@ -6,27 +6,27 @@ import com.cherrybite.enums.UserRole;
 
 public class CurrentUser {
 
-    private UUID userId;
-    
-    private String username;
-    
-    private UserRole role;
+  private UUID userId;
 
-    public CurrentUser(UUID userId, String username, UserRole role) {
-        this.userId = userId;
-        this.username = username;
-        this.role = role;
-    }
+  private String username;
 
-    public UUID getUserId() {
-        return userId;
-    }
+  private UserRole role;
 
-    public String getUsername() {
-        return username;
-    }
+  public CurrentUser(UUID userId, String username, UserRole role) {
+    this.userId = userId;
+    this.username = username;
+    this.role = role;
+  }
 
-    public UserRole getRole() {
-        return role;
-    }
+  public UUID getUserId() {
+    return userId;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public UserRole getRole() {
+    return role;
+  }
 }

@@ -26,64 +26,64 @@ import jakarta.validation.Valid;
 @RequestMapping("/comment")
 public class CommentController {
 
-	@Autowired
-	private CommentService commentService;
+  @Autowired
+  private CommentService commentService;
 
-	@PostMapping("/{foodPostId}")
-	public ResponseEntity<CreateCommentResponse> addComment(@PathVariable UUID foodPostId,
-			@Valid @RequestBody CreateCommentRequest request) {
+  @PostMapping("/{foodPostId}")
+  public ResponseEntity<CreateCommentResponse> addComment(@PathVariable UUID foodPostId,
+      @Valid @RequestBody CreateCommentRequest request) {
 
-		return ResponseEntity.ok(commentService.addComment(foodPostId, request));
-	}
+    return ResponseEntity.ok(commentService.addComment(foodPostId, request));
+  }
 
-	@PostMapping("/{commentId}/reply")
-	public ResponseEntity<CreateCommentResponse> replyComment(@PathVariable UUID commentId,
-			@Valid @RequestBody CreateCommentRequest request) {
+  @PostMapping("/{commentId}/reply")
+  public ResponseEntity<CreateCommentResponse> replyComment(@PathVariable UUID commentId,
+      @Valid @RequestBody CreateCommentRequest request) {
 
-		return ResponseEntity.ok(commentService.replyComment(commentId, request));
-	}
+    return ResponseEntity.ok(commentService.replyComment(commentId, request));
+  }
 
-	@PutMapping("/{commentId}")
-	public ResponseEntity<ApiResponse> updateComment(@PathVariable UUID commentId,
-			@Valid @RequestBody CreateCommentRequest request) {
-		String message = commentService.updateComment(commentId, request);
+  @PutMapping("/{commentId}")
+  public ResponseEntity<ApiResponse> updateComment(@PathVariable UUID commentId,
+      @Valid @RequestBody CreateCommentRequest request) {
+    String message = commentService.updateComment(commentId, request);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@DeleteMapping("/{commentId}")
-	public ResponseEntity<ApiResponse> deleteComment(@PathVariable UUID commentId) {
-		String message = commentService.deleteComment(commentId);
+  @DeleteMapping("/{commentId}")
+  public ResponseEntity<ApiResponse> deleteComment(@PathVariable UUID commentId) {
+    String message = commentService.deleteComment(commentId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/{foodPostId}/comments")
-	public ResponseEntity<List<CommentResponse>> getComments(@PathVariable UUID foodPostId) {
-		return ResponseEntity.ok(commentService.getComments(foodPostId));
-	}
+  @GetMapping("/{foodPostId}/comments")
+  public ResponseEntity<List<CommentResponse>> getComments(@PathVariable UUID foodPostId) {
+    return ResponseEntity.ok(commentService.getComments(foodPostId));
+  }
 
-	@PostMapping("/{commentId}/like")
-	public ResponseEntity<ApiResponse> likeComment(@PathVariable UUID commentId) {
+  @PostMapping("/{commentId}/like")
+  public ResponseEntity<ApiResponse> likeComment(@PathVariable UUID commentId) {
 
-		String message = commentService.likeComment(commentId);
+    String message = commentService.likeComment(commentId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@DeleteMapping("/{commentId}/like")
-	public ResponseEntity<ApiResponse> unlikeComment(@PathVariable UUID commentId) {
+  @DeleteMapping("/{commentId}/like")
+  public ResponseEntity<ApiResponse> unlikeComment(@PathVariable UUID commentId) {
 
-		String message = commentService.unlikeComment(commentId);
+    String message = commentService.unlikeComment(commentId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 }

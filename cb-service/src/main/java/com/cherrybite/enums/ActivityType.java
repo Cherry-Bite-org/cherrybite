@@ -2,15 +2,15 @@ package com.cherrybite.enums;
 
 public enum ActivityType {
 
-	POST,
+  POST,
 
-    COMMENT,
+  COMMENT,
 
-    FOLLOW,
+  FOLLOW,
 
-    CONFIRMED,
+  CONFIRMED,
 
-    NOT_ACCURATE,
-    
-    REPLY
+  NOT_ACCURATE,
+
+  REPLY
 }

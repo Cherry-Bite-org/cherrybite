@@ -6,7 +6,7 @@ import com.cherrybite.payload.response.VerifyOtpResponse;
 
 public interface OtpService {
 
-	String sendOtp(SendOtpRequest otpRequest);
+  String sendOtp(SendOtpRequest otpRequest);
 
-    VerifyOtpResponse verifyOtp(VerifyOtpRequest otpRequest);
+  VerifyOtpResponse verifyOtp(VerifyOtpRequest otpRequest);
 }

@@ -3,31 +3,31 @@ package com.cherrybite.payload.response;
 import java.util.UUID;
 
 public class FoodPostImageResponse {
-	
-	 private UUID imageId;
 
-	 private String imageUrl;
+  private UUID imageId;
 
-	 public FoodPostImageResponse(UUID imageId, String imageUrl) {
-		super();
-		this.imageId = imageId;
-		this.imageUrl = imageUrl;
-	}
+  private String imageUrl;
 
-	 public UUID getImageId() {
-		 return imageId;
-	 }
+  public FoodPostImageResponse(UUID imageId, String imageUrl) {
+    super();
+    this.imageId = imageId;
+    this.imageUrl = imageUrl;
+  }
 
-	 public void setImageId(UUID imageId) {
-		 this.imageId = imageId;
-	 }
+  public UUID getImageId() {
+    return imageId;
+  }
 
-	 public String getImageUrl() {
-		 return imageUrl;
-	 }
+  public void setImageId(UUID imageId) {
+    this.imageId = imageId;
+  }
 
-	 public void setImageUrl(String imageUrl) {
-		 this.imageUrl = imageUrl;
-	 }
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
 
 }

@@ -17,19 +17,19 @@ import com.cherrybite.entity.User;
 
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
-	Page<Notification> findByReceiverOrderByCreatedAtDesc(User receiver, Pageable pageable);
+  Page<Notification> findByReceiverOrderByCreatedAtDesc(User receiver, Pageable pageable);
 
-	long countByReceiverAndIsReadFalse(User receiver);
+  long countByReceiverAndIsReadFalse(User receiver);
 
-	Optional<Notification> findByNotificationIdAndReceiver(UUID notificationId, User receiver);
+  Optional<Notification> findByNotificationIdAndReceiver(UUID notificationId, User receiver);
 
-	@Modifying
-	@Transactional
-	@Query("""
-			UPDATE Notification n
-			SET n.isRead = true
-			WHERE n.receiver = :receiver
-			AND n.isRead = false
-			""")
-	int markAllAsRead(@Param("receiver") User receiver);
+  @Modifying
+  @Transactional
+  @Query("""
+      UPDATE Notification n
+      SET n.isRead = true
+      WHERE n.receiver = :receiver
+      AND n.isRead = false
+      """)
+  int markAllAsRead(@Param("receiver") User receiver);
 }

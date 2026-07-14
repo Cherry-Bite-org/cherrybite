@@ -11,10 +11,10 @@ import com.cherrybite.entity.User;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, UUID> {
 
-	boolean existsByCommentAndUser(Comment comment, User user);
+  boolean existsByCommentAndUser(Comment comment, User user);
 
-	Optional<CommentLike> findByCommentAndUser(Comment comment, User user);
+  Optional<CommentLike> findByCommentAndUser(Comment comment, User user);
 
-	long countByComment(Comment comment);
+  long countByComment(Comment comment);
 
 }

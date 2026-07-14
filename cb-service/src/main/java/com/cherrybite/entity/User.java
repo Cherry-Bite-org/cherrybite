@@ -20,244 +20,244 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User {
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID userId;
-    
-    @Column(name = "fullname", nullable = false)
-    private String fullName;
-    
-    @Column(name = "username", unique = true, nullable = false)
-    private String userName;
-    
-    @Column(unique = true)
-    private String email;
-    
-    @Column(name = "phonenumber", unique = true)
-    private String phoneNumber;
-    
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
-    
-    private String bio;
-    
-    @Column(name = "trust_score", precision = 5, scale = 2)
-    private BigDecimal trustScore;
-    
-    @Column(name = "review_count")
-    private Integer reviewCount;
-    
-    @Column(name = "follower_count")
-    private Integer followerCount;
-    
-    @Column(name = "following_count")
-    private Integer followingCount;
-    
-    @Column(name = "is_verified")
-    private Boolean isVerified;
-    
-    @Column(name = "location_permission")
-    private Boolean locationPermission;
-    
-    @Column(name = "last_latitude", precision = 10, scale = 8)
-    private BigDecimal lastLatitude;
-    
-    @Column(name = "last_longitude", precision = 11, scale = 8)
-    private BigDecimal lastLongitude;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
-    private UserRole userRole;
-    
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    
-    @Column(name = "last_location_updated_at")
-    private LocalDateTime lastLocationUpdatedAt;
-    
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        
-        if (this.trustScore == null)
-            this.trustScore = BigDecimal.ZERO;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID userId;
 
-        if (this.reviewCount == null)
-            this.reviewCount = 0;
+  @Column(name = "fullname", nullable = false)
+  private String fullName;
 
-        if (this.followerCount == null)
-            this.followerCount = 0;
+  @Column(name = "username", unique = true, nullable = false)
+  private String userName;
 
-        if (this.followingCount == null)
-            this.followingCount = 0;
+  @Column(unique = true)
+  private String email;
 
-        if (this.isVerified == null)
-            this.isVerified = false;
+  @Column(name = "phonenumber", unique = true)
+  private String phoneNumber;
 
-        if (this.locationPermission == null)
-            this.locationPermission = false;
-    }
+  @Column(name = "profile_image_url")
+  private String profileImageUrl;
 
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+  private String bio;
 
-	public UUID getUserId() {
-		return userId;
-	}
+  @Column(name = "trust_score", precision = 5, scale = 2)
+  private BigDecimal trustScore;
 
-	public void setUserId(UUID userId) {
-		this.userId = userId;
-	}
+  @Column(name = "review_count")
+  private Integer reviewCount;
 
-	public String getFullName() {
-		return fullName;
-	}
+  @Column(name = "follower_count")
+  private Integer followerCount;
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  @Column(name = "following_count")
+  private Integer followingCount;
 
-	public String getUserName() {
-		return userName;
-	}
+  @Column(name = "is_verified")
+  private Boolean isVerified;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+  @Column(name = "location_permission")
+  private Boolean locationPermission;
 
-	public String getEmail() {
-		return email;
-	}
+  @Column(name = "last_latitude", precision = 10, scale = 8)
+  private BigDecimal lastLatitude;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  @Column(name = "last_longitude", precision = 11, scale = 8)
+  private BigDecimal lastLongitude;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+  @Enumerated(EnumType.STRING)
+  @Column(name = "user_role")
+  private UserRole userRole;
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-	public String getProfileImageUrl() {
-		return profileImageUrl;
-	}
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-	public void setProfileImageUrl(String profileImageUrl) {
-		this.profileImageUrl = profileImageUrl;
-	}
+  @Column(name = "last_location_updated_at")
+  private LocalDateTime lastLocationUpdatedAt;
 
-	public String getBio() {
-		return bio;
-	}
+  @PrePersist
+  public void prePersist() {
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
 
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+    if (this.trustScore == null)
+      this.trustScore = BigDecimal.ZERO;
 
-	public BigDecimal getTrustScore() {
-		return trustScore;
-	}
+    if (this.reviewCount == null)
+      this.reviewCount = 0;
 
-	public void setTrustScore(BigDecimal trustScore) {
-		this.trustScore = trustScore;
-	}
+    if (this.followerCount == null)
+      this.followerCount = 0;
 
-	public Integer getReviewCount() {
-		return reviewCount;
-	}
+    if (this.followingCount == null)
+      this.followingCount = 0;
 
-	public void setReviewCount(Integer reviewCount) {
-		this.reviewCount = reviewCount;
-	}
+    if (this.isVerified == null)
+      this.isVerified = false;
 
-	public Integer getFollowerCount() {
-		return followerCount;
-	}
+    if (this.locationPermission == null)
+      this.locationPermission = false;
+  }
 
-	public void setFollowerCount(Integer followerCount) {
-		this.followerCount = followerCount;
-	}
+  @PreUpdate
+  public void preUpdate() {
+    this.updatedAt = LocalDateTime.now();
+  }
 
-	public Integer getFollowingCount() {
-		return followingCount;
-	}
+  public UUID getUserId() {
+    return userId;
+  }
 
-	public void setFollowingCount(Integer followingCount) {
-		this.followingCount = followingCount;
-	}
+  public void setUserId(UUID userId) {
+    this.userId = userId;
+  }
 
-	public Boolean getIsVerified() {
-		return isVerified;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public void setIsVerified(Boolean isVerified) {
-		this.isVerified = isVerified;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public Boolean getLocationPermission() {
-		return locationPermission;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	public void setLocationPermission(Boolean locationPermission) {
-		this.locationPermission = locationPermission;
-	}
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
-	public BigDecimal getLastLatitude() {
-		return lastLatitude;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setLastLatitude(BigDecimal lastLatitude) {
-		this.lastLatitude = lastLatitude;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public BigDecimal getLastLongitude() {
-		return lastLongitude;
-	}
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-	public void setLastLongitude(BigDecimal lastLongitude) {
-		this.lastLongitude = lastLongitude;
-	}
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
-	public UserRole getUserRole() {
-		return userRole;
-	}
+  public String getProfileImageUrl() {
+    return profileImageUrl;
+  }
 
-	public void setUserRole(UserRole userRole) {
-		this.userRole = userRole;
-	}
+  public void setProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
+  }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+  public String getBio() {
+    return bio;
+  }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
 
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+  public BigDecimal getTrustScore() {
+    return trustScore;
+  }
 
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public void setTrustScore(BigDecimal trustScore) {
+    this.trustScore = trustScore;
+  }
 
-	public LocalDateTime getLastLocationUpdatedAt() {
-		return lastLocationUpdatedAt;
-	}
+  public Integer getReviewCount() {
+    return reviewCount;
+  }
 
-	public void setLastLocationUpdatedAt(LocalDateTime lastLocationUpdatedAt) {
-		this.lastLocationUpdatedAt = lastLocationUpdatedAt;
-	}
-    
+  public void setReviewCount(Integer reviewCount) {
+    this.reviewCount = reviewCount;
+  }
+
+  public Integer getFollowerCount() {
+    return followerCount;
+  }
+
+  public void setFollowerCount(Integer followerCount) {
+    this.followerCount = followerCount;
+  }
+
+  public Integer getFollowingCount() {
+    return followingCount;
+  }
+
+  public void setFollowingCount(Integer followingCount) {
+    this.followingCount = followingCount;
+  }
+
+  public Boolean getIsVerified() {
+    return isVerified;
+  }
+
+  public void setIsVerified(Boolean isVerified) {
+    this.isVerified = isVerified;
+  }
+
+  public Boolean getLocationPermission() {
+    return locationPermission;
+  }
+
+  public void setLocationPermission(Boolean locationPermission) {
+    this.locationPermission = locationPermission;
+  }
+
+  public BigDecimal getLastLatitude() {
+    return lastLatitude;
+  }
+
+  public void setLastLatitude(BigDecimal lastLatitude) {
+    this.lastLatitude = lastLatitude;
+  }
+
+  public BigDecimal getLastLongitude() {
+    return lastLongitude;
+  }
+
+  public void setLastLongitude(BigDecimal lastLongitude) {
+    this.lastLongitude = lastLongitude;
+  }
+
+  public UserRole getUserRole() {
+    return userRole;
+  }
+
+  public void setUserRole(UserRole userRole) {
+    this.userRole = userRole;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public LocalDateTime getLastLocationUpdatedAt() {
+    return lastLocationUpdatedAt;
+  }
+
+  public void setLastLocationUpdatedAt(LocalDateTime lastLocationUpdatedAt) {
+    this.lastLocationUpdatedAt = lastLocationUpdatedAt;
+  }
+
 }

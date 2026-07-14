@@ -4,84 +4,84 @@ import java.math.BigDecimal;
 
 public class PublicUserProfileResponse {
 
-    private String fullName;
-    
-    private String userName;
-    
-    private String profileImageUrl;
-    
-    private String bio;
+  private String fullName;
 
-    private BigDecimal trustScore;
-    
-    private Integer reviewCount;
-    
-    private Integer followers;
-    
-    private Integer following;
+  private String userName;
 
-	public String getFullName() {
-		return fullName;
-	}
+  private String profileImageUrl;
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  private String bio;
 
-	public String getUserName() {
-		return userName;
-	}
+  private BigDecimal trustScore;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+  private Integer reviewCount;
 
-	public String getProfileImageUrl() {
-		return profileImageUrl;
-	}
+  private Integer followers;
 
-	public void setProfileImageUrl(String profileImageUrl) {
-		this.profileImageUrl = profileImageUrl;
-	}
+  private Integer following;
 
-	public String getBio() {
-		return bio;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public void setBio(String bio) {
-		this.bio = bio;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public BigDecimal getTrustScore() {
-		return trustScore;
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	public void setTrustScore(BigDecimal trustScore) {
-		this.trustScore = trustScore;
-	}
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 
-	public Integer getReviewCount() {
-		return reviewCount;
-	}
+  public String getProfileImageUrl() {
+    return profileImageUrl;
+  }
 
-	public void setReviewCount(Integer reviewCount) {
-		this.reviewCount = reviewCount;
-	}
+  public void setProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
+  }
 
-	public Integer getFollowers() {
-		return followers;
-	}
+  public String getBio() {
+    return bio;
+  }
 
-	public void setFollowers(Integer followers) {
-		this.followers = followers;
-	}
+  public void setBio(String bio) {
+    this.bio = bio;
+  }
 
-	public Integer getFollowing() {
-		return following;
-	}
+  public BigDecimal getTrustScore() {
+    return trustScore;
+  }
 
-	public void setFollowing(Integer following) {
-		this.following = following;
-	}
+  public void setTrustScore(BigDecimal trustScore) {
+    this.trustScore = trustScore;
+  }
+
+  public Integer getReviewCount() {
+    return reviewCount;
+  }
+
+  public void setReviewCount(Integer reviewCount) {
+    this.reviewCount = reviewCount;
+  }
+
+  public Integer getFollowers() {
+    return followers;
+  }
+
+  public void setFollowers(Integer followers) {
+    this.followers = followers;
+  }
+
+  public Integer getFollowing() {
+    return following;
+  }
+
+  public void setFollowing(Integer following) {
+    this.following = following;
+  }
 
 }

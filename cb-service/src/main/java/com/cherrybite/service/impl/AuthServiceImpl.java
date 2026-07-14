@@ -24,119 +24,121 @@ import com.cherrybite.service.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
-	@Autowired
-	private OtpVerificationRepository otpVerificationRepository;
+  @Autowired
+  private OtpVerificationRepository otpVerificationRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-	@Autowired
-	private JwtProvider jwtProvider;
+  @Autowired
+  private JwtProvider jwtProvider;
 
-	@Autowired
-	private RefreshTokenRepository refreshTokenRepository;
+  @Autowired
+  private RefreshTokenRepository refreshTokenRepository;
 
-	@Override
-	public AuthResponse register(RegisterRequest request) {
+  @Override
+  public AuthResponse register(RegisterRequest request) {
 
-		log.info("User registration start");
+    log.info("User registration start");
 
-		OtpVerification otpVerification = otpVerificationRepository
-				.findTopByTemporaryTokenOrderByCreatedAtDesc(request.getTemporaryToken())
-				.orElseThrow(() -> new UserException("Invalid temporary token"));
+    OtpVerification otpVerification = otpVerificationRepository
+        .findTopByTemporaryTokenOrderByCreatedAtDesc(request.getTemporaryToken())
+        .orElseThrow(() -> new UserException("Invalid temporary token"));
 
-		if (!Boolean.TRUE.equals(otpVerification.getVerified())) {
-			throw new UserException("OTP verification required");
-		}
+    if (!Boolean.TRUE.equals(otpVerification.getVerified())) {
+      throw new UserException("OTP verification required");
+    }
 
-		if (userRepository.findByUserName(request.getUserName()).isPresent()) {
-			throw new UserException("Username already exists");
-		}
+    if (userRepository.findByUserName(request.getUserName()).isPresent()) {
+      throw new UserException("Username already exists");
+    }
 
-		User user = new User();
+    User user = new User();
 
-		user.setFullName(request.getFullName());
-		user.setUserName(request.getUserName());
-		user.setUserRole(UserRole.ROLE_USER);
+    user.setFullName(request.getFullName());
+    user.setUserName(request.getUserName());
+    user.setUserRole(UserRole.ROLE_USER);
 
-		if (otpVerification.getIdentifier().contains("@")) {
+    if (otpVerification.getIdentifier().contains("@")) {
 
-			user.setEmail(otpVerification.getIdentifier());
+      user.setEmail(otpVerification.getIdentifier());
 
-			if (request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank()) {
-				user.setPhoneNumber(request.getPhoneNumber());
-			}
+      if (request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank()) {
+        user.setPhoneNumber(request.getPhoneNumber());
+      }
 
-		} else {
+    } else {
 
-			user.setPhoneNumber(otpVerification.getIdentifier());
+      user.setPhoneNumber(otpVerification.getIdentifier());
 
-			if (request.getEmail() != null && !request.getEmail().isBlank()) {
-				user.setEmail(request.getEmail());
-			}
-		}
+      if (request.getEmail() != null && !request.getEmail().isBlank()) {
+        user.setEmail(request.getEmail());
+      }
+    }
 
-		User savedUser = userRepository.save(user);
+    User savedUser = userRepository.save(user);
 
-		String accessToken = jwtProvider.generateToken(savedUser);
-		String refreshToken = createRefreshToken(savedUser);
+    String accessToken = jwtProvider.generateToken(savedUser);
+    String refreshToken = createRefreshToken(savedUser);
 
-		AuthResponse response = new AuthResponse();
-		response.setAccessToken(accessToken);
-		response.setRefreshToken(refreshToken);
-		response.setMessage("Account created successfully");
+    AuthResponse response = new AuthResponse();
+    response.setAccessToken(accessToken);
+    response.setRefreshToken(refreshToken);
+    response.setMessage("Account created successfully");
 
-		return response;
-	}
+    return response;
+  }
 
-	private String createRefreshToken(User user) {
+  private String createRefreshToken(User user) {
 
-		String token = jwtProvider.generateRefreshToken();
+    String token = jwtProvider.generateRefreshToken();
 
-		RefreshToken refreshToken = new RefreshToken();
+    RefreshToken refreshToken = new RefreshToken();
 
-		refreshToken.setUser(user);
-		refreshToken.setToken(token);
-		refreshToken.setExpiresAt(LocalDateTime.now().plusDays(30));
+    refreshToken.setUser(user);
+    refreshToken.setToken(token);
+    refreshToken.setExpiresAt(LocalDateTime.now().plusDays(30));
 
-		refreshTokenRepository.save(refreshToken);
+    refreshTokenRepository.save(refreshToken);
 
-		return token;
-	}
+    return token;
+  }
 
-	@Override
-	public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenValue) {
+  @Override
+  public AuthResponse refreshAccessToken(RefreshTokenRequest refreshTokenValue) {
 
-		RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
-				.orElseThrow(() -> new UserException("Invalid refresh token"));
+    RefreshToken refreshToken =
+        refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
+            .orElseThrow(() -> new UserException("Invalid refresh token"));
 
-		if (Boolean.TRUE.equals(refreshToken.getRevoked())) {
+    if (Boolean.TRUE.equals(refreshToken.getRevoked())) {
 
-			throw new UserException("Refresh token revoked");
-		}
+      throw new UserException("Refresh token revoked");
+    }
 
-		if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+    if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
 
-			throw new UserException("Refresh token expired");
-		}
+      throw new UserException("Refresh token expired");
+    }
 
-		String accessToken = jwtProvider.generateToken(refreshToken.getUser());
-		AuthResponse response = new AuthResponse();
-		response.setAccessToken(accessToken);
-		return response;
-	}
+    String accessToken = jwtProvider.generateToken(refreshToken.getUser());
+    AuthResponse response = new AuthResponse();
+    response.setAccessToken(accessToken);
+    return response;
+  }
 
-	@Override
-	public void logout(RefreshTokenRequest refreshTokenValue) {
+  @Override
+  public void logout(RefreshTokenRequest refreshTokenValue) {
 
-		RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
-				.orElseThrow(() -> new UserException("Invalid refresh token"));
+    RefreshToken refreshToken =
+        refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
+            .orElseThrow(() -> new UserException("Invalid refresh token"));
 
-		refreshToken.setRevoked(true);
+    refreshToken.setRevoked(true);
 
-		refreshTokenRepository.save(refreshToken);
-	}
+    refreshTokenRepository.save(refreshToken);
+  }
 
 }

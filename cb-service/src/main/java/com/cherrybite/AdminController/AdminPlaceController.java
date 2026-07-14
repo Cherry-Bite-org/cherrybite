@@ -18,18 +18,18 @@ import com.cherrybite.service.PlaceService;
 @RequestMapping("/admin/places")
 public class AdminPlaceController {
 
-	@Autowired
-	private PlaceService placeService;
+  @Autowired
+  private PlaceService placeService;
 
-	@PutMapping("/{placeId}")
-	public ResponseEntity<ApiResponse> updatePlace(@PathVariable UUID placeId,
-			@RequestBody UpdatePlaceRequest request) {
+  @PutMapping("/{placeId}")
+  public ResponseEntity<ApiResponse> updatePlace(@PathVariable UUID placeId,
+      @RequestBody UpdatePlaceRequest request) {
 
-		String message = placeService.updatePlace(placeId, request);
+    String message = placeService.updatePlace(placeId, request);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
 }

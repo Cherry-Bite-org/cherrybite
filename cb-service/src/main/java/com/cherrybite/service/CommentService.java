@@ -9,17 +9,17 @@ import com.cherrybite.payload.response.CreateCommentResponse;
 
 public interface CommentService {
 
-	CreateCommentResponse addComment(UUID foodPostId, CreateCommentRequest request);
+  CreateCommentResponse addComment(UUID foodPostId, CreateCommentRequest request);
 
-	CreateCommentResponse replyComment(UUID commentId, CreateCommentRequest request);
+  CreateCommentResponse replyComment(UUID commentId, CreateCommentRequest request);
 
-	String updateComment(UUID commentId, CreateCommentRequest request);
-	
-	String deleteComment(UUID commentId);
-	
-	List<CommentResponse> getComments(UUID foodPostId);
-	
-	String likeComment(UUID commentId);
-	
-	String unlikeComment(UUID commentId);
+  String updateComment(UUID commentId, CreateCommentRequest request);
+
+  String deleteComment(UUID commentId);
+
+  List<CommentResponse> getComments(UUID foodPostId);
+
+  String likeComment(UUID commentId);
+
+  String unlikeComment(UUID commentId);
 }

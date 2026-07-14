@@ -11,17 +11,17 @@ import com.cherrybite.service.StorageService;
 @Service
 @Profile("prod")
 public class S3StorageService implements StorageService {
-	private static final Logger log = LoggerFactory.getLogger(S3StorageService.class);
+  private static final Logger log = LoggerFactory.getLogger(S3StorageService.class);
 
-	@Override
-	public String upload(MultipartFile file, String folderName) {
-		log.info("Upload Image to S3 Storage");
-		return null;
-	}
+  @Override
+  public String upload(MultipartFile file, String folderName) {
+    log.info("Upload Image to S3 Storage");
+    return null;
+  }
 
-	@Override
-	public void delete(String imageUrl) {
-		// TODO Auto-generated method stub
-		
-	}
+  @Override
+  public void delete(String imageUrl) {
+    // TODO Auto-generated method stub
+
+  }
 }

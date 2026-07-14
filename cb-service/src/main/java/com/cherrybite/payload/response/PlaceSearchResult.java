@@ -4,33 +4,33 @@ import java.util.UUID;
 
 public class PlaceSearchResult {
 
-	private UUID placeId;
+  private UUID placeId;
 
-    private String name;
+  private String name;
 
-    private String address;
+  private String address;
 
-	public UUID getPlaceId() {
-		return placeId;
-	}
+  public UUID getPlaceId() {
+    return placeId;
+  }
 
-	public void setPlaceId(UUID placeId) {
-		this.placeId = placeId;
-	}
+  public void setPlaceId(UUID placeId) {
+    this.placeId = placeId;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getAddress() {
-		return address;
-	}
+  public String getAddress() {
+    return address;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public void setAddress(String address) {
+    this.address = address;
+  }
 }

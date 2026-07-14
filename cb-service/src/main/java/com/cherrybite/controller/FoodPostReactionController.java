@@ -19,41 +19,42 @@ import com.cherrybite.service.FoodPostReactionService;
 @RequestMapping("/food-posts-reaction")
 public class FoodPostReactionController {
 
-	@Autowired
-	private FoodPostReactionService reactionService;
+  @Autowired
+  private FoodPostReactionService reactionService;
 
-	@PostMapping("/{foodPostId}/confirm")
-	public ResponseEntity<ApiResponse> confirmFoodPost(@PathVariable UUID foodPostId) {
+  @PostMapping("/{foodPostId}/confirm")
+  public ResponseEntity<ApiResponse> confirmFoodPost(@PathVariable UUID foodPostId) {
 
-		String message = reactionService.confirmFoodPost(foodPostId);
+    String message = reactionService.confirmFoodPost(foodPostId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@PostMapping("/{foodPostId}/not-accurate")
-	public ResponseEntity<ApiResponse> markNotAccurate(@PathVariable UUID foodPostId) {
+  @PostMapping("/{foodPostId}/not-accurate")
+  public ResponseEntity<ApiResponse> markNotAccurate(@PathVariable UUID foodPostId) {
 
-		String message = reactionService.markNotAccurate(foodPostId);
+    String message = reactionService.markNotAccurate(foodPostId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@DeleteMapping("/{foodPostId}/reaction")
-	public ResponseEntity<ApiResponse> removeReaction(@PathVariable UUID foodPostId) {
+  @DeleteMapping("/{foodPostId}/reaction")
+  public ResponseEntity<ApiResponse> removeReaction(@PathVariable UUID foodPostId) {
 
-		String message = reactionService.removeReaction(foodPostId);
+    String message = reactionService.removeReaction(foodPostId);
 
-		ApiResponse response = new ApiResponse();
-		response.setMessage(message);
-		return ResponseEntity.ok(response);
-	}
+    ApiResponse response = new ApiResponse();
+    response.setMessage(message);
+    return ResponseEntity.ok(response);
+  }
 
-	@GetMapping("/{foodPostId}/reactions")
-	public ResponseEntity<FoodPostReactionSummaryResponse> getReactionSummary(@PathVariable UUID foodPostId) {
-		return ResponseEntity.ok(reactionService.getReactionSummary(foodPostId));
-	}
+  @GetMapping("/{foodPostId}/reactions")
+  public ResponseEntity<FoodPostReactionSummaryResponse> getReactionSummary(
+      @PathVariable UUID foodPostId) {
+    return ResponseEntity.ok(reactionService.getReactionSummary(foodPostId));
+  }
 }

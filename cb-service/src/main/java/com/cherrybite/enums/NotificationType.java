@@ -2,16 +2,16 @@ package com.cherrybite.enums;
 
 public enum NotificationType {
 
-    FOLLOW,
+  FOLLOW,
 
-    COMMENT,
+  COMMENT,
 
-    REPLY,
+  REPLY,
 
-    MENTION,
+  MENTION,
 
-    CONFIRMED,
+  CONFIRMED,
 
-    NOT_ACCURATE
+  NOT_ACCURATE
 
 }

@@ -11,5 +11,5 @@ import com.cherrybite.entity.User;
 
 public interface ActivityRepository extends JpaRepository<Activity, UUID> {
 
-	Page<Activity> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+  Page<Activity> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 }

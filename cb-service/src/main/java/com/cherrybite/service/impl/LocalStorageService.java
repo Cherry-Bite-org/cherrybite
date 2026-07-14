@@ -19,58 +19,59 @@ import com.cherrybite.service.StorageService;
 @Service
 @Profile("local")
 public class LocalStorageService implements StorageService {
-	private static final Logger log = LoggerFactory.getLogger(LocalStorageService.class);
+  private static final Logger log = LoggerFactory.getLogger(LocalStorageService.class);
 
-	@Value("${app.upload.dir}")
-	private String uploadDir;
+  @Value("${app.upload.dir}")
+  private String uploadDir;
 
-	@Value("${app.base-url}")
-	private String baseUrl;
+  @Value("${app.base-url}")
+  private String baseUrl;
 
-	@Value("${server.servlet.context-path}")
-	private String contextPath;
+  @Value("${server.servlet.context-path}")
+  private String contextPath;
 
-	@Override
-	public String upload(MultipartFile file, String folderName) {
-		log.info("Upload Image to Local Storage");
-		try {
+  @Override
+  public String upload(MultipartFile file, String folderName) {
+    log.info("Upload Image to Local Storage");
+    try {
 
-			String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+      String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-			Path path = Paths.get(uploadDir, folderName);
+      Path path = Paths.get(uploadDir, folderName);
 
-			if (!Files.exists(path)) {
-				Files.createDirectories(path);
-			}
+      if (!Files.exists(path)) {
+        Files.createDirectories(path);
+      }
 
-			Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(file.getInputStream(), path.resolve(fileName),
+          StandardCopyOption.REPLACE_EXISTING);
 
-			return baseUrl + contextPath + "/uploads/" + folderName + "/" + fileName;
-		} catch (IOException e) {
-			throw new RuntimeException("Image upload failed", e);
-		}
+      return baseUrl + contextPath + "/uploads/" + folderName + "/" + fileName;
+    } catch (IOException e) {
+      throw new RuntimeException("Image upload failed", e);
+    }
 
-	}
+  }
 
-	@Override
-	public void delete(String imageUrl) {
-		if (imageUrl == null || imageUrl.isBlank()) {
-			return;
-		}
-		
-		log.info("Delete existing image from the local storage");
-		try {
+  @Override
+  public void delete(String imageUrl) {
+    if (imageUrl == null || imageUrl.isBlank()) {
+      return;
+    }
 
-			String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+    log.info("Delete existing image from the local storage");
+    try {
 
-			Path path = Paths.get(uploadDir, fileName);
+      String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
 
-			Files.deleteIfExists(path);
+      Path path = Paths.get(uploadDir, fileName);
 
-		} catch (IOException e) {
-			throw new RuntimeException("Unable to delete image", e);
-		}
+      Files.deleteIfExists(path);
 
-	}
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to delete image", e);
+    }
+
+  }
 
 }

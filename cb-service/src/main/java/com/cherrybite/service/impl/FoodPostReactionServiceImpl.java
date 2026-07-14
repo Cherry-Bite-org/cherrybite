@@ -25,157 +25,143 @@ import com.cherrybite.service.NotificationService;
 
 @Service
 public class FoodPostReactionServiceImpl implements FoodPostReactionService {
-	
-	private static final Logger log = LoggerFactory.getLogger(FoodPostReactionServiceImpl.class);
 
-	@Autowired
-	private FoodPostRepository foodPostRepository;
+  private static final Logger log = LoggerFactory.getLogger(FoodPostReactionServiceImpl.class);
 
-	@Autowired
-	private UserServiceImpl userServiceImpl;
+  @Autowired
+  private FoodPostRepository foodPostRepository;
 
-	@Autowired
-	private FoodPostReactionRepository reactionRepository;
-	
-	@Autowired
-	private NotificationService notificationService;
-	
-	@Autowired
-	private ActivityService activityService;
+  @Autowired
+  private UserServiceImpl userServiceImpl;
 
-	@Override
-	public String confirmFoodPost(UUID foodPostId) {
+  @Autowired
+  private FoodPostReactionRepository reactionRepository;
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+  @Autowired
+  private NotificationService notificationService;
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+  @Autowired
+  private ActivityService activityService;
 
-		FoodPostReaction reaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser).orElse(null);
+  @Override
+  public String confirmFoodPost(UUID foodPostId) {
 
-		if (reaction == null) {
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			reaction = new FoodPostReaction();
-			reaction.setFoodPost(foodPost);
-			reaction.setUser(currentUser);
-			reaction.setReactionType(FoodReactionType.CONFIRMED);
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-			reactionRepository.save(reaction);
+    FoodPostReaction reaction =
+        reactionRepository.findByFoodPostAndUser(foodPost, currentUser).orElse(null);
 
-			return "Food post confirmed";
-		}
+    if (reaction == null) {
 
-		if (reaction.getReactionType() == FoodReactionType.CONFIRMED) {
-			throw new UserException("Already confirmed");
-		}
+      reaction = new FoodPostReaction();
+      reaction.setFoodPost(foodPost);
+      reaction.setUser(currentUser);
+      reaction.setReactionType(FoodReactionType.CONFIRMED);
 
-		reaction.setReactionType(FoodReactionType.CONFIRMED);
+      reactionRepository.save(reaction);
 
-		reactionRepository.save(reaction);
-		
-		activityService.createActivity(
-		        currentUser,
-		        foodPost,
-		        null,
-		        null,
-		        ActivityType.CONFIRMED);
+      return "Food post confirmed";
+    }
 
-		try {
-		notificationService.createNotification(
-		        foodPost.getCreatedBy(),
-		        currentUser,
-		        foodPost,
-		        null,
-		        NotificationType.CONFIRMED);
-		} catch (Exception e) {
-		    log.error("Failed to create Confirm notification", e);
-		}
-		return "Reaction updated successfully";
-	}
+    if (reaction.getReactionType() == FoodReactionType.CONFIRMED) {
+      throw new UserException("Already confirmed");
+    }
 
-	@Override
-	public String markNotAccurate(UUID foodPostId) {
+    reaction.setReactionType(FoodReactionType.CONFIRMED);
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    reactionRepository.save(reaction);
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+    activityService.createActivity(currentUser, foodPost, null, null, ActivityType.CONFIRMED);
 
-		FoodPostReaction reaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser).orElse(null);
+    try {
+      notificationService.createNotification(foodPost.getCreatedBy(), currentUser, foodPost, null,
+          NotificationType.CONFIRMED);
+    } catch (Exception e) {
+      log.error("Failed to create Confirm notification", e);
+    }
+    return "Reaction updated successfully";
+  }
 
-		if (reaction == null) {
+  @Override
+  public String markNotAccurate(UUID foodPostId) {
 
-			reaction = new FoodPostReaction();
-			reaction.setFoodPost(foodPost);
-			reaction.setUser(currentUser);
-			reaction.setReactionType(FoodReactionType.NOT_ACCURATE);
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-			reactionRepository.save(reaction);
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-			return "Marked as not accurate";
-		}
+    FoodPostReaction reaction =
+        reactionRepository.findByFoodPostAndUser(foodPost, currentUser).orElse(null);
 
-		if (reaction.getReactionType() == FoodReactionType.NOT_ACCURATE) {
-			throw new UserException("Already marked as not accurate");
-		}
+    if (reaction == null) {
 
-		reaction.setReactionType(FoodReactionType.NOT_ACCURATE);
+      reaction = new FoodPostReaction();
+      reaction.setFoodPost(foodPost);
+      reaction.setUser(currentUser);
+      reaction.setReactionType(FoodReactionType.NOT_ACCURATE);
 
-		reactionRepository.save(reaction);
-		
-		activityService.createActivity(
-		        currentUser,
-		        foodPost,
-		        null,
-		        null,
-		        ActivityType.NOT_ACCURATE);
-		
-		try {
-		notificationService.createNotification(
-		        foodPost.getCreatedBy(),
-		        currentUser,
-		        foodPost,
-		        null,
-		        NotificationType.NOT_ACCURATE);
-		} catch (Exception e) {
-		    log.error("Failed to create Not Accurate notification", e);
-		}
-		return "Reaction updated successfully";
-	}
+      reactionRepository.save(reaction);
 
-	@Override
-	public String removeReaction(UUID foodPostId) {
+      return "Marked as not accurate";
+    }
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    if (reaction.getReactionType() == FoodReactionType.NOT_ACCURATE) {
+      throw new UserException("Already marked as not accurate");
+    }
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+    reaction.setReactionType(FoodReactionType.NOT_ACCURATE);
 
-		FoodPostReaction reaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser)
-				.orElseThrow(() -> new UserException("Reaction not found"));
+    reactionRepository.save(reaction);
 
-		reactionRepository.delete(reaction);
+    activityService.createActivity(currentUser, foodPost, null, null, ActivityType.NOT_ACCURATE);
 
-		return "Reaction removed successfully";
-	}
+    try {
+      notificationService.createNotification(foodPost.getCreatedBy(), currentUser, foodPost, null,
+          NotificationType.NOT_ACCURATE);
+    } catch (Exception e) {
+      log.error("Failed to create Not Accurate notification", e);
+    }
+    return "Reaction updated successfully";
+  }
 
-	@Override
-	public FoodPostReactionSummaryResponse getReactionSummary(UUID foodPostId) {
+  @Override
+  public String removeReaction(UUID foodPostId) {
 
-		User currentUser = userServiceImpl.getCurrentUserEntity();
+    User currentUser = userServiceImpl.getCurrentUserEntity();
 
-		FoodPost foodPost = getActiveFoodPost(foodPostId);
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
 
-		long confirmed = reactionRepository.countByFoodPostAndReactionType(foodPost, FoodReactionType.CONFIRMED);
+    FoodPostReaction reaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser)
+        .orElseThrow(() -> new UserException("Reaction not found"));
 
-		long notAccurate = reactionRepository.countByFoodPostAndReactionType(foodPost, FoodReactionType.NOT_ACCURATE);
+    reactionRepository.delete(reaction);
 
-		FoodReactionType myReaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser)
-				.map(FoodPostReaction::getReactionType).orElse(null);
+    return "Reaction removed successfully";
+  }
 
-		return new FoodPostReactionSummaryResponse(confirmed, notAccurate, myReaction);
-	}
+  @Override
+  public FoodPostReactionSummaryResponse getReactionSummary(UUID foodPostId) {
 
-	private FoodPost getActiveFoodPost(UUID foodPostId) {
-		return foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
-				.orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
-	}
+    User currentUser = userServiceImpl.getCurrentUserEntity();
+
+    FoodPost foodPost = getActiveFoodPost(foodPostId);
+
+    long confirmed =
+        reactionRepository.countByFoodPostAndReactionType(foodPost, FoodReactionType.CONFIRMED);
+
+    long notAccurate =
+        reactionRepository.countByFoodPostAndReactionType(foodPost, FoodReactionType.NOT_ACCURATE);
+
+    FoodReactionType myReaction = reactionRepository.findByFoodPostAndUser(foodPost, currentUser)
+        .map(FoodPostReaction::getReactionType).orElse(null);
+
+    return new FoodPostReactionSummaryResponse(confirmed, notAccurate, myReaction);
+  }
+
+  private FoodPost getActiveFoodPost(UUID foodPostId) {
+    return foodPostRepository.findByFoodPostIdAndStatus(foodPostId, FoodPostStatus.ACTIVE)
+        .orElseThrow(() -> new ResourceNotFoundException("Food post not found"));
+  }
 
 }
