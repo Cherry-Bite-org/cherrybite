@@ -44,15 +44,21 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.log("Test");
     // Check if error is 401 Unauthorized (via status code or response body message)
     const isUnauthorized =
       error.response?.status === 401 ||
       error.response?.data?.status === 401 ||
       error.response?.data?.message === "Invalid JWT Token";
 
-    if (isUnauthorized && !originalRequest._retry) {
-      console.log("Test11");
+    // Exclude public auth endpoints from token refresh / redirect interceptor
+    const isAuthEndpoint =
+      originalRequest.url?.includes("/auth/verify-otp") ||
+      originalRequest.url?.includes("/auth/send-otp") ||
+      originalRequest.url?.includes("/auth/register") ||
+      originalRequest.url?.includes("/auth/check-username") ||
+      originalRequest.url?.includes("/auth/refresh-token");
+
+    if (isUnauthorized && !isAuthEndpoint && !originalRequest._retry) {
       // If we are already refreshing, queue this request
       if (isRefreshing) {
         return new Promise<string | null>((resolve, reject) => {
