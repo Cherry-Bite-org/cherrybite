@@ -1,12 +1,10 @@
 package com.cherrybite.service.impl;
 
 import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.cherrybite.config.JwtProvider;
 import com.cherrybite.entity.OtpVerification;
 import com.cherrybite.entity.RefreshToken;
@@ -131,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logout(RefreshTokenRequest refreshTokenValue) {
-
+    log.info("User Logout");
     RefreshToken refreshToken =
         refreshTokenRepository.findByToken(refreshTokenValue.getRefreshToken())
             .orElseThrow(() -> new UserException("Invalid refresh token"));

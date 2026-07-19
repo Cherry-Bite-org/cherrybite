@@ -2,7 +2,6 @@ package com.cherrybite.config;
 
 import java.util.Arrays;
 import java.util.Collections;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,7 +48,9 @@ public class SecurityConfig {
   private CorsConfigurationSource corsConfigurationSource() {
     return request -> {
       CorsConfiguration corsConfiguration = new CorsConfiguration();
-      corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4000"));
+      corsConfiguration
+          .setAllowedOrigins(Arrays.asList("http://localhost:4000", "http://localhost:5174",
+              "http://192.168.1.10:5173", "http://192.168.1.10:5174", "http://localhost:5173"));
       corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
       corsConfiguration.setAllowCredentials(true);
       corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));

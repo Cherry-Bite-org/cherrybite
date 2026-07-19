@@ -1,14 +1,16 @@
-import './App.css'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AppRoutes from "./routes/AppRoutes";
+import { Toaster } from "sonner";
+
+const queryClient = new QueryClient();
 
 function App() {
-
-
   return (
-    <>
-    <p>Welcome To Cherry Bite Lets Start Here!</p>
-    <h1>Cherry Bite Web UI</h1>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      <AppRoutes />
+      <Toaster position="top-center" richColors />
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
