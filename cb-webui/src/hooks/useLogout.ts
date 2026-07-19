@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 export const useLogout = () => {
   const logoutStore = useAuthStore((state) => state.logout);
+  const refreshToken = useAuthStore((state) => state.refreshToken);
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: authService.logout,
+    mutationFn: () => authService.logout({ refreshToken: refreshToken || "" }),
 
     onSuccess: (response) => {
       toast.success(response.message);

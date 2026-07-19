@@ -39,6 +39,11 @@ export const authService = {
     return response.data;
   },
 
+  logout: async (payload: { refreshToken: string }): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>("/auth/logout", payload);
+    return response.data;
+  },
+
   refreshToken: async (payload: RefreshTokenPayload): Promise<RefreshTokenResponse> => {
     const response = await api.post<RefreshTokenResponse>("/auth/refresh-token", payload);
     return response.data;
